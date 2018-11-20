@@ -1,0 +1,17 @@
+target
+
+# clj
+.cpcache
+
+# npm
+node_modules
+
+# vim
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# shadow-cljs
+.shadow-cljs
