@@ -1,13 +1,13 @@
-{:paths ["src"]
- :deps
- {org.clojure/clojurescript {:mvn/version "1.10.439"}
-  org.clojure/clojure {:mvn/version "1.10.0-beta7"}
-  NuID/utils {:git/url "git@github.com:NuID/utils.git"
-              :sha "31316d34c8fa4cb0f3d4676f48de344cdd0e5b88"}
-  NuID/ecc {:git/url "git@github.com:NuID/ecc.git"
-            :sha "adb88df200847f95852c1fb17c8ed131c9354f21"}
-  NuID/bn {:git/url "git@github.com:NuID/bn.git"
-           :sha "2ac9990c67193649394cfc6563353ec2aaa41ff5"}}
+{:deps
+ {nuid/cryptography {:sha "dbdb4cdefaaa971ca8f32556a69867b109e6ae32"
+                     :git/url "git@github.com:NuID/cryptography.git"}
+  nuid/ecc {:sha "b81a651154525d4a06907906488e83e9211b391a"
+            :git/url "git@github.com:NuID/ecc.git"}
+  nuid/bn {:sha "d4c12ac791a1e1c30a0d946000a7dbec3023f17f"
+           :git/url "git@github.com:NuID/bn.git"}
+  org.clojure/clojurescript {:mvn/version "1.10.439"}
+  org.clojure/clojure {:mvn/version "1.10.0-RC2"}}
  :aliases
  {:cambada
-  {:extra-deps {luchiniatwork/cambada {:mvn/version "1.0.0"}}}}}
+  {:extra-deps {luchiniatwork/cambada {:mvn/version "1.0.0"}}}}
+ :paths ["src"]}

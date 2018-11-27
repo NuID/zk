@@ -1,6 +1,6 @@
 (ns nuid.zka
   (:require
-   [nuid.utils :as utils]
+   [nuid.cryptography :as crypto]
    [nuid.ecc :as ecc]
    [nuid.bn :as bn]))
 
@@ -17,7 +17,7 @@
   [{:keys [protocol curve keyfn hashfn r1 r2 secret secret-key b]}]
   (let [cur (get ecc/supported-curves curve)
         G (ecc/G cur)
-        k (or secret-key ((utils/generate-hashfn keyfn) secret))
+        k (or secret-key ((crypto/generate-hashfn keyfn) secret))
         a (bn/str->bn (:result k))
         A (ecc/mul G a)
         rel (bn/mul a (bn/add b relation))
@@ -25,7 +25,7 @@
         R1 (ecc/mul G r1)
         R2 (ecc/mul G r2)
         RA (ecc/mul A r2)
-        hfn (utils/generate-hashfn hashfn)
+        hfn (crypto/generate-hashfn hashfn)
         h (->> [R1 R2 RA]
                (map ecc/pt->hex)
                clojure.string/join
@@ -55,8 +55,8 @@
 (defmethod generate-parameters :schnorrsnizk
   [{:keys [curve] :as opts}]
   (let [n (ecc/n (get ecc/supported-curves curve))
-        r1 (utils/randlt 32 n)
-        r2 (utils/randlt 32 n)]
+        r1 (crypto/randlt 32 n)
+        r2 (crypto/randlt 32 n)]
     (select-keys
      (generate-proof (assoc opts :r1 r1 :r2 r2))
      [:protocol :curve :keyfn :hashfn :c :r1 :r2])))

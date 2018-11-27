@@ -1,15 +1,12 @@
-{:deps {:aliases []}
-
- :builds
+{:builds
  {:browser-lib
-  {:target :browser
+  {:modules {:browser-lib {:entries [nuid.zka]}}
    :output-dir "target/browser-lib"
    :asset-path "target/browser-lib"
-   :modules
-   {:browser-lib
-    {:entries [nuid.zka]}}}
+   :target :browser}
 
   :node-lib
-  {:target :node-library
-   :output-to "target/node-lib/nuid_zka.js"
-   :exports-var nuid.zka/exports}}}
+  {:output-to "target/node-lib/nuid_zka.js"
+   :exports-var nuid.zka/exports
+   :target :node-library}}
+ :deps {:aliases []}}
