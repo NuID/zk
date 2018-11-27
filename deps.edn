@@ -1,7 +1,7 @@
 {:deps
  {nuid/cryptography {:sha "dbdb4cdefaaa971ca8f32556a69867b109e6ae32"
                      :git/url "git@github.com:NuID/cryptography.git"}
-  nuid/ecc {:sha "b81a651154525d4a06907906488e83e9211b391a"
+  nuid/ecc {:sha "69e4f96a37683e1bd3fcea1b0f3842161bc1f2f3"
             :git/url "git@github.com:NuID/ecc.git"}
   nuid/bn {:sha "d4c12ac791a1e1c30a0d946000a7dbec3023f17f"
            :git/url "git@github.com:NuID/bn.git"}
