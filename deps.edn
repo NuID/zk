@@ -1,12 +1,12 @@
 {:deps
- {nuid/cryptography {:sha "dbdb4cdefaaa971ca8f32556a69867b109e6ae32"
+ {nuid/cryptography {:sha "576bfff69a59d81280f6d2de1c63276dcdcfbe9b"
                      :git/url "git@github.com:NuID/cryptography.git"}
-  nuid/ecc {:sha "69e4f96a37683e1bd3fcea1b0f3842161bc1f2f3"
+  nuid/ecc {:sha "5cf86fc2151b8879dcb2e59576051cd97b875e52"
             :git/url "git@github.com:NuID/ecc.git"}
-  nuid/bn {:sha "d4c12ac791a1e1c30a0d946000a7dbec3023f17f"
+  nuid/bn {:sha "c87a3275a91e51cea3bae2f4f0c940f14c9f1be5"
            :git/url "git@github.com:NuID/bn.git"}
-  org.clojure/clojurescript {:mvn/version "1.10.439"}
-  org.clojure/clojure {:mvn/version "1.10.0-RC2"}}
+  org.clojure/clojurescript {:mvn/version "1.10.520"}
+  org.clojure/clojure {:mvn/version "1.10.0"}}
  :aliases
  {:cambada
   {:extra-deps {luchiniatwork/cambada {:mvn/version "1.0.0"}}}}

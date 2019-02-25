@@ -15,3 +15,6 @@ node_modules
 
 # shadow-cljs
 .shadow-cljs
+
+# nrepl
+.nrepl-port
