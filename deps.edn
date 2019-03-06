@@ -1,9 +1,9 @@
 {:deps
- {nuid/cryptography {:sha "576bfff69a59d81280f6d2de1c63276dcdcfbe9b"
+ {nuid/cryptography {:sha "f27c0cad1c7faf3d0df83369af6f25ba0a54b272"
                      :git/url "git@github.com:NuID/cryptography.git"}
-  nuid/ecc {:sha "5cf86fc2151b8879dcb2e59576051cd97b875e52"
+  nuid/ecc {:sha "9fb69dcd5ac04ee7fa66f8826a9b1d027d9eb913"
             :git/url "git@github.com:NuID/ecc.git"}
-  nuid/bn {:sha "c87a3275a91e51cea3bae2f4f0c940f14c9f1be5"
+  nuid/bn {:sha "96edf024f2dda3a6afb05071c9349d744d4d8c11"
            :git/url "git@github.com:NuID/bn.git"}
   org.clojure/clojurescript {:mvn/version "1.10.520"}
   org.clojure/clojure {:mvn/version "1.10.0"}}
