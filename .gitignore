@@ -1,10 +1,25 @@
+# build
 target
+*.jar
+*.class
+classes
+pom.xml
+pom.xml.asc
+resources/public/js/nuid
 
 # clj
 .cpcache
 
+# terraform
+*.tfstate*
+.terraform
+plan
+
 # npm
 node_modules
+
+# emacs
+.\#*
 
 # vim
 *.swp
@@ -16,5 +31,14 @@ node_modules
 # shadow-cljs
 .shadow-cljs
 
-# nrepl
+# nREPL
 .nrepl-port
+
+# nohup
+nohup.out
+
+# misc
+logs
+log
+tmp
+*.tmp
