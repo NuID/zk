@@ -1,13 +1,13 @@
 {:deps
  {nuid/cryptography
   {:git/url "git@github.com:nuid/cryptography.git",
-   :sha "143eee52d5f3cc2365405ef0c9993b5aeb9fd6b5"},
+   :sha "d1e6cafe5f901326f82878ce6d4b8dc3715a0c3c"},
   nuid/ecc
   {:git/url "git@github.com:nuid/ecc.git",
-   :sha "d7d4c33b7c3c25d626ad9540673b69c8ac461423"},
+   :sha "2c48a427c5ea59dad6292384d2c564fb18b558eb"},
   nuid/bn
   {:git/url "git@github.com:nuid/bn.git",
-   :sha "296b024f38155631ce55a1eaceebe91a269e01da"},
+   :sha "450c0e01afc7ae432cfc4e5caa368f52668247e0"},
   org.clojure/clojurescript {:mvn/version "1.10.520"},
   org.clojure/clojure {:mvn/version "1.10.0"}},
  :aliases
@@ -15,5 +15,5 @@
   {:extra-deps
    {nuid/deps
     {:git/url "git@github.com:nuid/deps.git",
-     :sha "a08e2a8726a77992fedc8d8f0f2468529d483018"}}}},
+     :sha "50e8c35171a89df43d0f39e84b0c8142e8f2523d"}}}},
  :paths ["src"]}
