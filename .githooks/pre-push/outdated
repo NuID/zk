@@ -1,0 +1,3 @@
+#!/bin/sh
+npm outdated
+clojure -A:depot
