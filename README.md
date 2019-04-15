@@ -14,7 +14,7 @@ Cross-platform zero knowledge proofs.
 
 ### tools.deps:
 
-`{nuid/zk {:git/url "https://github.com/nuid/zk" :sha "..."}`
+`{nuid/zk {:git/url "https://github.com/nuid/zk" :sha "..."}}`
 
 ### usage:
 
