@@ -1,19 +1,33 @@
 {:deps
  {nuid/cryptography
-  {:git/url "git@github.com:nuid/cryptography.git",
-   :sha "39c95fc2da02290dbc4dc1419f255f93b0745169"},
-  nuid/ecc
-  {:git/url "git@github.com:nuid/ecc.git",
-   :sha "ed709d90e014dd3e8c20f7b780ccd3a029f4882b"},
+  {:git/url "https://github.com/nuid/cryptography.git",
+   :sha "596499c8e21847e250ecc65d1b3994209bdb64fd"},
+  nuid/elliptic
+  {:git/url "https://github.com/nuid/elliptic.git",
+   :sha "b7d8215004163fabc7d5c335b7155ceace5deafe"},
+  nuid/base64
+  {:git/url "https://github.com/nuid/base64.git",
+   :sha "7eb59aaa4dfa4ef37cf1acdbfd78ec37e2ebb404"},
   nuid/bn
-  {:git/url "git@github.com:nuid/bn.git",
-   :sha "760b472a8f63fbdb97ca79be49933249a7b3af62"},
+  {:git/url "https://github.com/nuid/bn.git",
+   :sha "884b6fb68afa0e582afde56b0fc3302eadcd8355"},
   org.clojure/clojurescript {:mvn/version "1.10.520"},
   org.clojure/clojure {:mvn/version "1.10.0"}},
  :aliases
- {:repl
+ {:cljfmt
+  {:extra-deps
+   {com.jameslaverack/cljfmt-runner
+    {:git/url "https://github.com/JamesLaverack/cljfmt-runner",
+     :sha "97960e9a6464935534b5a6bab529e063d0027128"}},
+   :main-opts ["-m" "cljfmt-runner.check"]},
+  :cljfmt/fix {:main-opts ["-m" "cljfmt-runner.fix"]},
+  :depot
+  {:extra-deps {olical/depot {:mvn/version "1.8.2"}},
+   :main-opts ["-m" "depot.outdated.main"]},
+  :depot/update {:main-opts ["-m" "depot.outdated.main --update"]},
+  :repl
   {:extra-deps
    {nuid/deps
-    {:git/url "git@github.com:nuid/deps.git",
-     :sha "8a32571147caf3c58d89293848d244cc6733d1f7"}}}},
+    {:git/url "https://github.com/nuid/deps.git",
+     :sha "735373d03749d29aefc8207aaa15030fd781e91b"}}}},
  :paths ["src"]}

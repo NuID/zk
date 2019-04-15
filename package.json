@@ -6,9 +6,9 @@
     "elliptic": "^6.4.1",
     "hash.js": "^1.1.7",
     "scryptsy": "^2.0.0",
-    "shadow-cljs": "^2.8.18"
+    "shadow-cljs": "^2.8.31"
   },
   "devDependencies": {
-    "source-map-support": "^0.5.11"
+    "source-map-support": "^0.5.12"
   }
 }
