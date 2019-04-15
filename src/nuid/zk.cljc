@@ -36,8 +36,9 @@
                        (base64/encode A)))]
     (bn/eq? H c)))
 
-(defn coerce [{:keys [curve keyfn hashfn] :as opts}]
-  (let [f (comp bn/from :digest)])
+(defn coerce
+  "Coerces pure data into representations used by `nuid.zk` fns"
+  [{:keys [curve keyfn hashfn] :as opts}]
   (merge opts {:hashfn (comp bn/from :digest (crypt/hashfn hashfn))
                :keyfn (comp bn/from :digest (crypt/hashfn keyfn))
                :curve (curve/from (:id curve))}))
