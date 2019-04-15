@@ -4,7 +4,7 @@
    :sha "596499c8e21847e250ecc65d1b3994209bdb64fd"},
   nuid/elliptic
   {:git/url "https://github.com/nuid/elliptic.git",
-   :sha "b7d8215004163fabc7d5c335b7155ceace5deafe"},
+   :sha "80b68da5441be9f6c03c0abd7493d00f994b364e"},
   nuid/base64
   {:git/url "https://github.com/nuid/base64.git",
    :sha "7eb59aaa4dfa4ef37cf1acdbfd78ec37e2ebb404"},
