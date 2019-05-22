@@ -15,7 +15,7 @@
 
 (defmulti proof dispatch)
 (defmethod proof :knizk
-  [{:keys [protocol curve keyfn hashfn pub secret nonce]}]
+  [{:keys [curve keyfn hashfn pub secret nonce]}]
   (let [q (curve/order curve)
         r (crypt/secure-random-bn-lt 32 q)
         A (point/mul (curve/base curve) r)
