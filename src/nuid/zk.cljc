@@ -9,12 +9,12 @@
 (def dispatch (comp :id :protocol))
 
 (defmulti pub dispatch)
-(defmethod pub :knizk
+(defmethod pub "knizk"
   [{:keys [curve keyfn secret]}]
   (point/mul (curve/base curve) (keyfn secret)))
 
 (defmulti proof dispatch)
-(defmethod proof :knizk
+(defmethod proof "knizk"
   [{:keys [curve keyfn hashfn pub secret nonce]}]
   (let [q (curve/order curve)
         r (crypt/secure-random-bn-lt 32 q)
@@ -27,7 +27,7 @@
     {:c c :s s}))
 
 (defmulti verified? dispatch)
-(defmethod verified? :knizk
+(defmethod verified? "knizk"
   [{:keys [curve hashfn pub nonce c s]}]
   (let [A (point/add (point/mul (curve/base curve) s)
                      (point/neg (point/mul pub c)))
@@ -37,7 +37,7 @@
     (bn/eq? H c)))
 
 (defn coerce
-  "Coerces pure data into representations used by `nuid.zk` fns"
+  "Coerces data into representations used by `nuid.zk` fns"
   [{:keys [curve keyfn hashfn] :as opts}]
   (merge opts {:hashfn (comp bn/from :digest (crypt/hashfn hashfn))
                :keyfn (comp bn/from :digest (crypt/hashfn keyfn))
