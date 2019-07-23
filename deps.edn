@@ -4,13 +4,13 @@
    :sha "b9500a1f46228262f6ff03d437731f69e86af4e2"},
   nuid/elliptic
   {:git/url "https://github.com/nuid/elliptic.git",
-   :sha "02ae5cdede5cef6798cae01cd773dee015dd1bf0"},
+   :sha "6d7ea6ac5efb5e71a0eb76c694869d4a54627da5"},
   nuid/base64
   {:git/url "https://github.com/nuid/base64.git",
-   :sha "0b0489421f10cc2455513dac3255755ad76af7dc"},
+   :sha "f745b3f5a2941031faf2b1303d8d4855a530f34a"},
   nuid/bn
   {:git/url "https://github.com/nuid/bn.git",
-   :sha "023a08ace3be5bfc201379a829f69ca3116f0575"},
+   :sha "4a78d4da4389d7fb64c3355ab9ca6540fc933b38"},
   org.clojure/clojurescript {:mvn/version "1.10.520"},
   org.clojure/clojure {:mvn/version "1.10.1"}},
  :aliases
@@ -22,12 +22,13 @@
    :main-opts ["-m" "cljfmt-runner.check"]},
   :cljfmt/fix {:main-opts ["-m" "cljfmt-runner.fix"]},
   :depot
-  {:extra-deps {olical/depot {:mvn/version "1.8.2"}},
+  {:extra-deps {olical/depot {:mvn/version "1.8.4"}},
    :main-opts ["-m" "depot.outdated.main"]},
   :depot/update {:main-opts ["-m" "depot.outdated.main --update"]},
+  :shadow {:extra-deps {thheller/shadow-cljs {:mvn/version "2.8.40"}}},
   :repl
   {:extra-deps
    {nuid/deps
     {:git/url "https://github.com/nuid/deps.git",
-     :sha "411c76ace16481c30e9fd78796dc93898499cdf5"}}}},
+     :sha "93dc4bbd8b171a034809a5eebf217be83e391ef8"}}}},
  :paths ["src"]}

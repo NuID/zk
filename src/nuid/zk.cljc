@@ -38,10 +38,10 @@
 
 (defn coerce
   "Coerces data into representations used by `nuid.zk` fns"
-  [{:keys [pub keyfn hashfn] :as opts}]
+  [{:keys [pub curve keyfn hashfn] :as opts}]
   (merge opts {:hashfn (comp bn/from :digest (crypt/hashfn hashfn))
                :keyfn (comp bn/from :digest (crypt/hashfn keyfn))
-               :curve (curve/from pub)}))
+               :curve (curve/from (or (:id curve) pub))}))
 
 #?(:cljs
    (def exports
