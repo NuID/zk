@@ -45,8 +45,18 @@
 
 #?(:cljs
    (def exports
-     #js {:coerce #(coerce (js->clj % :keywordize-keys true))
-          :verified? verified?
-          :dispatch dispatch
-          :proof proof
-          :pub pub}))
+     #js {:isVerified
+          (fn [spec pub nonce proof]
+            (let [params (coerce (js->clj spec :keywordize-keys true))
+                  nonce (bn/from nonce)
+                  proof (js->clj proof :keywordize-keys true)]
+              (verified? (merge params proof {:pub pub :nonce nonce}))))
+          :proof
+          (fn [spec pub nonce secret]
+            (let [params (coerce (js->clj spec :keywordize-keys true))
+                  nonce (bn/from nonce)]
+              (clj->js (proof (merge params {:pub pub :nonce nonce :secret secret})))))
+          :pub
+          (fn [spec secret]
+            (let [params (coerce (js->clj spec :keywordize-keys true))]
+              (pub (merge params {:secret secret}))))}))

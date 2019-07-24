@@ -25,12 +25,12 @@ $ clj # or shadow-cljs node-repl
 => (require '[nuid.cryptography :as crypt])
 => (require '[nuid.bn :as bn])
 => (require '[nuid.zk :as zk])
-=> (def protocol {:id :knizk})
-=> (def curve {:id :secp256k1})
-=> (def keyfn {:id :sha256
+=> (def protocol {:id "knizk"})
+=> (def curve {:id "secp256k1"})
+=> (def keyfn {:id "sha256"
                :salt (crypt/salt 32)
                :normalization-form "NFKC"})
-=> (def hashfn {:id :sha256
+=> (def hashfn {:id "sha256"
                 :normalization-form "NFKC"})
 => (def secret "high entropy ✅")
 => (def params (zk/coerce {:protocol protocol
@@ -59,24 +59,19 @@ This library aims to be usable from JavaScript. More work is necessary to establ
 $ shadow-cljs release node
 $ node
 > var Crypt = require('<...>/nuid_cryptography')
-> var Elliptic = require('<...>/nuid_elliptic');
 > var Zk = require('./target/node/nuid_zk');
 
-> var params = {"curve": Elliptic.curve.from("secp256k1")
-                "keyfn": Crypt.scryptParameters()
-                "hashfn": {"id" "sha256"
-                           "normalization-form" "NFKC"}
-                "secret": {"high entropy ✅"}};
-> params = Zk.coerce(params);
-> var pub = Zk.pub(params);
-> var nonce = Crypt.secureRandomBn(32);
-> params.pub = pub;
-> params.nonce = nonce;
-> var good = Zk.proof(params);
-> delete params.secret;
-> params.c = good.c;
-> params.s = good.s;
-> Zk.verified(params);
+> var spec = {"protocol": {"id": "knizk"},
+              "curve": {"id": "secp256k1"},
+              "keyfn": Crypt.scryptParameters(),
+              "hashfn": {"id": "sha256", "normalization-form": "NFKC"}};
+> var secret = "high entropy ✅"
+> var pub = Zk.pub(spec, secret);
+> var nonce = Crypt.secureRandomBytes(32);
+> var good = Zk.proof(spec, pub, nonce, secret);
+> var bad = Zk.proof(spec, pub, nonce, "garbage 🚮")
+> Zk.isVerified(spec, pub, nonce, good);
+> Zk.isVerified(spec, pub, nonce, bad);
 ```
 
 ### browser:
