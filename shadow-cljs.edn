@@ -12,4 +12,4 @@
    :target :node-library,
    :compiler-options
    {:externs ["externs/bn.ext.js" "externs/elliptic.ext.js"]}}},
- :deps {:aliases []}}
+ :deps {:aliases [:shadow]}}
