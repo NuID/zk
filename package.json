@@ -1,6 +1,6 @@
 {
   "name": "@nuid/zk",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Cross-platform zero knowledge facilities",
   "main": "target/node/nuid_zk.js",
   "files": ["LICENSE*"],
