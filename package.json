@@ -1,14 +1,33 @@
 {
+  "name": "@nuid/zk",
+  "version": "0.0.5",
+  "description": "Cross-platform zero knowledge facilities",
+  "main": "target/node/nuid_zk.js",
+  "files": ["LICENSE*"],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nuid/zk.git"
+  },
+  "keywords": [],
+  "author": "NuID, Inc.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nuid/zk/issues"
+  },
+  "homepage": "https://github.com/nuid/zk",
   "dependencies": {
     "bn.js": "^5.0.0",
     "brorand": "^1.1.0",
     "buffer": "^5.2.1",
     "elliptic": "^6.5.0",
     "hash.js": "^1.1.7",
-    "scryptsy": "^2.1.0",
-    "shadow-cljs": "^2.8.40"
+    "scryptsy": "^2.1.0"
   },
   "devDependencies": {
-    "source-map-support": "^0.5.12"
+    "source-map-support": "^0.5.12",
+    "shadow-cljs": "^2.8.40"
   }
 }

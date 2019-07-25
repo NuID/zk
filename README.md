@@ -51,15 +51,14 @@ $ clj # or shadow-cljs node-repl
 
 ## From JavaScript
 
-This library aims to be usable from JavaScript. More work is necessary to establish the most convient consumption patterns, which will likely involve [`transit-js`](https://github.com/cognitect/transit-js).
+This library aims to be usable from JavaScript. More work is necessary to establish the most convient consumption patterns.
 
 ### node:
 
 ```
-$ shadow-cljs release node
 $ node
-> var Crypt = require('<...>/nuid_cryptography')
-> var Zk = require('./target/node/nuid_zk');
+> var Crypt = require('@nuid/cryptography')
+> var Zk = require('@nuid/zk');
 
 > var spec = {"protocol": {"id": "knizk"},
               "curve": {"id": "secp256k1"},
@@ -76,10 +75,7 @@ $ node
 
 ### browser:
 
-```
-$ shadow-cljs release browser
-## go use ./target/browser/nuid_zk.js in a browser script
-```
+The `npm` package is browser compatible in Webpack-like workflows.
 
 ## From Java
 
