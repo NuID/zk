@@ -45,18 +45,29 @@
 
 #?(:cljs
    (def exports
-     #js {:isVerified
-          (fn [spec pub nonce proof]
-            (let [params (coerce (js->clj spec :keywordize-keys true))
-                  nonce (bn/from nonce)
-                  proof (js->clj proof :keywordize-keys true)]
-              (verified? (merge params proof {:pub pub :nonce nonce}))))
-          :proof
-          (fn [spec pub nonce secret]
-            (let [params (coerce (js->clj spec :keywordize-keys true))
-                  nonce (bn/from nonce)]
-              (clj->js (proof (merge params {:pub pub :nonce nonce :secret secret})))))
-          :pub
-          (fn [spec secret]
-            (let [params (coerce (js->clj spec :keywordize-keys true))]
-              (pub (merge params {:secret secret}))))}))
+     (let [make-pub    (fn [spec secret]
+                         (let [params (coerce (js->clj spec :keywordize-keys true))]
+                           (pub (merge params {:secret secret}))))
+
+           coerce-pub  (fn [spec pub]
+                         (if (string? pub)
+                           (let [curve (.. spec -curve -id)]
+                             (point/from-rep {"curve" curve "point" pub}))
+                           pub))
+
+           make-proof  (fn [spec pub nonce secret]
+                         (let [params (coerce (js->clj spec :keywordize-keys true))
+                               pub (coerce-pub spec pub)
+                               nonce (bn/from nonce)]
+                           (clj->js (proof (merge params {:pub pub :nonce nonce :secret secret})))))
+
+           is-verified (fn [spec pub nonce proof]
+                         (let [params (coerce (js->clj spec :keywordize-keys true))
+                               pub (coerce-pub spec pub)
+                               nonce (bn/from nonce)
+                               proof (js->clj proof :keywordize-keys true)]
+                           (verified? (merge params proof {:pub pub :nonce nonce}))))]
+       #js {:pub make-pub
+            :encodedPub (comp base64/encode make-pub)
+            :proof make-proof
+            :isVerified is-verified})))
