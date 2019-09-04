@@ -4,7 +4,8 @@
    [nuid.elliptic.curve :as curve]
    [nuid.cryptography :as crypt]
    [nuid.base64 :as base64]
-   [nuid.bn :as bn]))
+   [nuid.bn :as bn]
+   #?@(:cljs [[goog.object :as obj]])))
 
 (def dispatch (comp :id :protocol))
 
@@ -45,29 +46,103 @@
 
 #?(:cljs
    (def exports
-     (let [make-pub    (fn [spec secret]
-                         (let [params (coerce (js->clj spec :keywordize-keys true))]
-                           (pub (merge params {:secret secret}))))
+     (letfn [(generateScryptParameters
+               [& [params]]
+               (doto (clj->js (crypt/scrypt-parameters {:n 8192 :r 4}))
+                 (obj/extend (or params #js {}))))
 
-           coerce-pub  (fn [spec pub]
-                         (if (string? pub)
-                           (let [curve (.. spec -curve -id)]
-                             (point/from-rep {"curve" curve "point" pub}))
-                           pub))
+             (generateSpec
+              [& [spec]]
+              (doto #js {"protocol" #js {"id" "knizk"}
+                         "curve" #js {"id" "secp256k1"}
+                         "keyfn" (generateScryptParameters)
+                         "hashfn" #js {"id" "sha256"
+                                       "normalization-form" "NFKC"}}
+                (obj/extend (or spec #js {}))))
 
-           make-proof  (fn [spec pub nonce secret]
-                         (let [params (coerce (js->clj spec :keywordize-keys true))
-                               pub (coerce-pub spec pub)
-                               nonce (bn/from nonce)]
-                           (clj->js (proof (merge params {:pub pub :nonce nonce :secret secret})))))
+             (coerceSpec
+              [spec]
+              (-> (generateSpec spec)
+                  (js->clj :keywordize-keys true)
+                  (coerce)))
 
-           is-verified (fn [spec pub nonce proof]
-                         (let [params (coerce (js->clj spec :keywordize-keys true))
-                               pub (coerce-pub spec pub)
-                               nonce (bn/from nonce)
-                               proof (js->clj proof :keywordize-keys true)]
-                           (verified? (merge params proof {:pub pub :nonce nonce}))))]
-       #js {:pub make-pub
-            :encodedPub (comp base64/encode make-pub)
-            :proof make-proof
-            :isVerified is-verified})))
+             (generatePub
+              ([secret] (generatePub nil secret))
+              ([spec secret]
+               (-> (merge
+                    (coerceSpec spec)
+                    {:secret secret})
+                   (pub)
+                   (point/rep)
+                   (clj->js))))
+
+             (coercePub
+              [pub]
+              (point/from-rep
+               (js->clj pub)))
+
+             (generateNonce
+              [& [num-bytes]]
+              (-> (or num-bytes 32)
+                  (crypt/secure-random-bn)
+                  (bn/str 16)))
+
+             (coerceBn
+              [hex]
+              (bn/from hex 16))
+
+             (generateProof
+              [spec pub nonce secret]
+              (-> (merge
+                   (coerceSpec spec)
+                   {:pub (coercePub pub)
+                    :nonce (coerceBn nonce)
+                    :secret secret})
+                  (proof)
+                  (update :c #(bn/str % 16))
+                  (update :s #(bn/str % 16))
+                  (clj->js)))
+
+             (proofFromSecret
+              ([secret] (proofFromSecret nil secret))
+              ([spec secret]
+               (let [spec (generateSpec spec)
+                     pub (or (obj/get spec "pub") (generatePub spec secret))
+                     nonce (or (obj/get spec "nonce") (generateNonce))
+                     proof (generateProof spec pub nonce secret)]
+                 (doto #js {"nonce" nonce "pub" pub}
+                   (obj/extend spec proof)))))
+
+             (coerceProof
+              [proof]
+              (merge
+               (coerceSpec proof)
+               {:pub (coercePub (obj/get proof "pub"))
+                :nonce (coerceBn (obj/get proof "nonce"))
+                :c (coerceBn (obj/get proof "c"))
+                :s (coerceBn (obj/get proof "s"))}))
+
+             (proofIsVerified
+              [proof]
+              (verified? (coerceProof proof)))
+
+             (isCredentialKey
+              [k]
+              (#{"keyfn" "pub"} k))
+
+             (credentialFromProof
+              [proof]
+              (obj/filter
+               proof
+               (fn [_ k _]
+                 (isCredentialKey k))))
+
+             (challengeFromCredential
+              [cred]
+              (doto #js {"nonce" (generateNonce)}
+                (obj/extend (generateSpec cred))))]
+       #js {:generateScryptParameters generateScryptParameters
+            :proofFromSecret proofFromSecret
+            :proofIsVerified proofIsVerified
+            :credentialFromProof credentialFromProof
+            :challengeFromCredential challengeFromCredential})))

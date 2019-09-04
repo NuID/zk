@@ -4,7 +4,7 @@ Cross-platform zero knowledge proofs.
 
 ## ⚠️  This library has not been independently audited.
 
-## Git issues and other communications are warmly welcomed. [dev@nuid.io](mailto:dev@nuid.io)
+Git issues and other communications are warmly welcomed. [dev@nuid.io](mailto:dev@nuid.io)
 
 ## Requirements
 
@@ -57,20 +57,30 @@ This library aims to be usable from JavaScript. More work is necessary to establ
 
 ```
 $ node
-> var Crypt = require('@nuid/cryptography')
 > var Zk = require('@nuid/zk');
 
-> var spec = {"protocol": {"id": "knizk"},
-              "curve": {"id": "secp256k1"},
-              "keyfn": Crypt.scryptParameters(),
-              "hashfn": {"id": "sha256", "normalization-form": "NFKC"}};
+// client context, sign up
 > var secret = "high entropy ✅"
-> var pub = Zk.pub(spec, secret);
-> var nonce = Crypt.secureRandomBytes(32);
-> var good = Zk.proof(spec, pub, nonce, secret);
-> var bad = Zk.proof(spec, pub, nonce, "garbage 🚮")
-> Zk.isVerified(spec, pub, nonce, good);
-> Zk.isVerified(spec, pub, nonce, bad);
+> var proof = Zk.proofFromSecret(secret);
+> var json = JSON.stringify(proof);
+
+// server context, sign up
+> var proof = JSON.parse(json);
+> Zk.proofIsVerified(proof);
+> var credential = Zk.credentialFromProof(proof); // persist (db, ledger, ...)
+
+// server context, sign in
+> var challenge = Zk.challengeFromCredential(credential);
+> var json = JSON.stringify(challenge);
+
+// client context, sign in
+> var challenge = JSON.parse(json);
+> proof = Zk.proofFromSecret(challenge, secret);
+> var json = JSON.stringify(proof);
+
+// server context, sign in
+> var proof = JSON.parse(json);
+> Zk.proofIsVerified(proof) ? /* ... */ : /* ... */ ;
 ```
 
 ### browser:
