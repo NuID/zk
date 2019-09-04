@@ -1,9 +1,11 @@
 {
   "name": "@nuid/zk",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "Cross-platform zero knowledge facilities",
   "main": "target/node/nuid_zk.js",
-  "files": ["LICENSE*"],
+  "files": [
+    "LICENSE*"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,7 +29,7 @@
     "scryptsy": "^2.1.0"
   },
   "devDependencies": {
-    "source-map-support": "^0.5.12",
-    "shadow-cljs": "^2.8.40"
+    "shadow-cljs": "^2.8.52",
+    "source-map-support": "^0.5.12"
   }
 }
