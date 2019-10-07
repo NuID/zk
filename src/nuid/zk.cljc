@@ -149,9 +149,9 @@
 #?(:cljs
    (def exports
      (letfn [(generateScryptParameters
-              [& [params]]
-              (doto (clj->js (crypt/generate-default-scrypt-parameters))
-                (obj/extend (or params #js {}))))
+               [& [params]]
+               (doto (clj->js (crypt/generate-default-scrypt-parameters))
+                 (obj/extend (or params #js {}))))
 
              (generateSpec
               [& [spec]]

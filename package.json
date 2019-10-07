@@ -23,13 +23,13 @@
   "dependencies": {
     "bn.js": "^5.0.0",
     "brorand": "^1.1.0",
-    "buffer": "^5.4.2",
+    "buffer": "^5.4.3",
     "elliptic": "^6.5.1",
     "hash.js": "^1.1.7",
     "scryptsy": "^2.1.0"
   },
   "devDependencies": {
-    "shadow-cljs": "^2.8.52",
+    "shadow-cljs": "^2.8.55",
     "source-map-support": "^0.5.13"
   }
 }
