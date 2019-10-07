@@ -2,7 +2,7 @@
  {org.clojure/clojure {:mvn/version "1.10.1"},
   nuid/elliptic
   {:git/url "https://github.com/nuid/elliptic.git",
-   :sha "54757190253a1cf71c5eb5c56ac0bef7e9cdadf2"},
+   :sha "312829c7eb099d990e1807a9d5f04038cbce4b45"},
   org.clojure/spec-alpha2
   {:git/url "https://github.com/clojure/spec-alpha2",
    :sha "683e507a9647b65a248a5e00d314f9cfaaa2ce56"},
@@ -10,13 +10,13 @@
   org.clojure/clojurescript {:mvn/version "1.10.520"},
   nuid/base64
   {:git/url "https://github.com/nuid/base64.git",
-   :sha "637d8be8e71b74382aa46aea0b70b2c6693d0ec3"},
+   :sha "6282194a235a3f759b4582a6281d3b628ae544f7"},
   nuid/cryptography
   {:git/url "https://github.com/nuid/cryptography.git",
-   :sha "124d2f4fc55a49e3fea56d131f0f18d26997655b"},
+   :sha "9c7ba6853fa21e00dcdff753a8eef73cc655caf1"},
   nuid/bn
   {:git/url "https://github.com/nuid/bn.git",
-   :sha "2451617a02e8fae11f700b968d6127b969c7f399"},
+   :sha "b7acffeeca6c6190e7a2bd6c618371884877b11a"},
   org.clojure/test.check {:mvn/version "0.10.0"}},
  :aliases
  {:cljfmt
@@ -35,5 +35,5 @@
   {:extra-deps
    {nuid/deps
     {:git/url "https://github.com/nuid/deps.git",
-     :sha "e45cfbec3884a63387e13cdb163c41fd3c3e861b"}}}},
+     :sha "f1b21065a56ceae418cc124691a74d0ff5395c68"}}}},
  :paths ["src"]}
