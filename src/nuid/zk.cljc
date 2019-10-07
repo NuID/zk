@@ -5,30 +5,116 @@
    [nuid.cryptography :as crypt]
    [nuid.base64 :as base64]
    [nuid.bn :as bn]
-   #?@(:cljs [[goog.object :as obj]])))
+   #?@(:clj
+       [[clojure.spec-alpha2.gen :as gen]
+        [clojure.spec-alpha2 :as s]]
+       :cljs
+       [[clojure.spec.gen.alpha :as gen]
+        [clojure.test.check.generators]
+        [clojure.spec.alpha :as s]
+        [goog.object :as obj]])))
 
-(def dispatch (comp :id :protocol))
+;; TODO: clean up once cljs supports `s/select`
+(s/def ::id #{"knizk"})
+(s/def ::protocol (s/keys :req-un [::id]))
+
+(s/def ::secret
+  (s/with-gen
+    (s/and string? not-empty)
+    (fn [] (gen/string-ascii))))
+
+(s/def ::conformed-hashfn
+  (s/and fn?
+         #(s/valid? ::crypt/hashfn-parameters
+                    (::crypt/opts (meta %)))
+         #(::conformed? (meta %))))
+
+(s/def ::hashfn-conformer
+  (s/conformer
+   (fn [x]
+     (if (s/valid? ::conformed-hashfn x)
+       x
+       (let [c (s/conform ::crypt/hashfn x)]
+         (if (s/invalid? c)
+           ::s/invalid
+           (with-meta
+             (comp bn/from :digest c)
+             (assoc (meta c) ::conformed? true))))))
+   (fn [x]
+     (if (s/valid? ::crypt/hashfn-parameters x)
+       x
+       (if (s/valid? ::crypt/conformed-hashfn x)
+         (::crypt/opts (meta x))
+         ::s/invalid)))))
+
+(s/def ::keyfn
+  (s/with-gen
+    ::hashfn-conformer
+    (fn [] (->> (s/gen ::crypt/keyfn-parameters)
+                (gen/fmap (partial s/conform ::hashfn-conformer))))))
+
+(s/def ::hashfn
+  (s/with-gen
+    ::hashfn-conformer
+    (fn [] (->> (s/gen ::crypt/hashfn-parameters)
+                (gen/such-that (comp #{"sha256" "sha512"} :id))
+                (gen/fmap (fn [m] (dissoc m :salt)))
+                (gen/fmap (partial s/conform ::hashfn-conformer))))))
+
+(s/def ::pub ::point/point)
+(s/def ::pri ::bn/bn)
+
+(s/def ::knizk-parameters
+  (s/keys :req-un [::protocol
+                   ::curve/curve
+                   ::keyfn
+                   ::hashfn]))
+
+(s/def ::parameters
+  (s/or ::knizk ::knizk-parameters))
+
+(s/def ::credential
+  (s/keys :req-un [::keyfn ::pub]))
+
+;; TODO: not using `s/merge` because it
+;; only conforms against it's first argument
+(s/def ::challenge
+  (s/keys :req-un [::protocol
+                   ::curve/curve
+                   ::keyfn
+                   ::hashfn
+                   ::pub
+                   ::crypt/nonce]))
+
+(defn- dispatch
+  [x]
+  (let [x (s/conform ::parameters x)]
+    (if (s/invalid? x)
+      x
+      (first x))))
 
 (defmulti pub dispatch)
-(defmethod pub "knizk"
-  [{:keys [curve keyfn secret]}]
-  (point/mul (curve/base curve) (keyfn secret)))
+(defmethod pub ::knizk
+  [{:keys [curve keyfn secret pri]}]
+  (point/mul
+   (curve/base curve)
+   (or pri (keyfn secret))))
 
 (defmulti proof dispatch)
-(defmethod proof "knizk"
-  [{:keys [curve keyfn hashfn pub secret nonce]}]
+(defmethod proof ::knizk
+  [{:keys [curve keyfn hashfn pub nonce secret pri]}]
   (let [q (curve/order curve)
-        r (crypt/secure-random-bn-lt 32 q)
+        r (crypt/generate-secure-random-bn-lt 32 q)
         A (point/mul (curve/base curve) r)
         c (hashfn (str (base64/encode pub)
                        (bn/str nonce 16)
                        (base64/encode A)))
-        x (keyfn secret)
+        x (or pri (keyfn secret))
         s (bn/mod (bn/add (bn/mul c x) r) q)]
     {:c c :s s}))
 
 (defmulti verified? dispatch)
-(defmethod verified? "knizk"
+(defmethod verified? ::knizk
   [{:keys [curve hashfn pub nonce c s]}]
   (let [A (point/add (point/mul (curve/base curve) s)
                      (point/neg (point/mul pub c)))
@@ -37,19 +123,35 @@
                        (base64/encode A)))]
     (bn/eq? H c)))
 
-(defn coerce
-  "Coerces data into representations used by `nuid.zk` fns"
-  [{:keys [pub curve keyfn hashfn] :as opts}]
-  (merge opts {:hashfn (comp bn/from :digest (crypt/hashfn hashfn))
-               :keyfn (comp bn/from :digest (crypt/hashfn keyfn))
-               :curve (curve/from (or (:id curve) pub))}))
+(s/def ::c ::bn/bn)
+(s/def ::s ::bn/bn)
+
+(s/def ::knizk-proof-data
+  (s/keys :req-un [::c ::s]))
+
+(s/def ::proof-data
+  (s/or ::knizk ::knizk-proof-data))
+
+(s/def ::knizk-proof
+  (s/with-gen
+    (s/and ::challenge
+           ::knizk-proof-data
+           verified?)
+    (fn [] (->> (s/gen ::knizk-parameters)
+                (gen/fmap (fn [m] (assoc m :nonce (gen/generate (s/gen ::crypt/nonce)))))
+                (gen/fmap (fn [m] (assoc m :secret (gen/generate (s/gen ::secret)))))
+                (gen/fmap (fn [m] (assoc m :pub (pub m))))
+                (gen/fmap (fn [m] (merge m (proof m))))))))
+
+(s/def ::proof
+  (s/or ::knizk ::knizk-proof))
 
 #?(:cljs
    (def exports
      (letfn [(generateScryptParameters
-               [& [params]]
-               (doto (clj->js (crypt/scrypt-parameters {:n 8192 :r 4}))
-                 (obj/extend (or params #js {}))))
+              [& [params]]
+              (doto (clj->js (crypt/generate-default-scrypt-parameters))
+                (obj/extend (or params #js {}))))
 
              (generateSpec
               [& [spec]]
@@ -62,46 +164,47 @@
 
              (coerceSpec
               [spec]
-              (-> (generateSpec spec)
-                  (js->clj :keywordize-keys true)
-                  (coerce)))
+              (as-> (generateSpec spec) $
+                (js->clj $ :keywordize-keys true)
+                (s/conform ::knizk-parameters $)))
 
              (generatePub
               ([secret] (generatePub nil secret))
               ([spec secret]
-               (-> (merge
-                    (coerceSpec spec)
-                    {:secret secret})
-                   (pub)
-                   (point/rep)
-                   (clj->js))))
+               (->> (merge
+                     (coerceSpec spec)
+                     {:secret secret})
+                    (pub)
+                    (s/unform ::pub)
+                    (clj->js))))
 
              (coercePub
               [pub]
-              (point/from-rep
-               (js->clj pub)))
+              (->> (js->clj pub :keywordize-keys true)
+                   (s/conform ::pub)))
 
              (generateNonce
-              [& [num-bytes]]
-              (-> (or num-bytes 32)
-                  (crypt/secure-random-bn)
-                  (bn/str 16)))
+              []
+              (->> (s/gen ::crypt/nonce)
+                   (gen/generate)
+                   (s/unform ::crypt/nonce)))
 
              (coerceBn
-              [hex]
-              (bn/from hex 16))
+              [x]
+              (s/conform ::bn/bn x))
 
              (generateProof
               [spec pub nonce secret]
-              (-> (merge
-                   (coerceSpec spec)
-                   {:pub (coercePub pub)
-                    :nonce (coerceBn nonce)
-                    :secret secret})
-                  (proof)
-                  (update :c #(bn/str % 16))
-                  (update :s #(bn/str % 16))
-                  (clj->js)))
+              (->> (merge
+                    (coerceSpec spec)
+                    {:pub (coercePub pub)
+                     :nonce (coerceBn nonce)
+                     :secret secret})
+                   (proof)
+                   (s/unform
+                    (s/keys
+                     :req-un [::c ::s]))
+                   (clj->js)))
 
              (proofFromSecret
               ([secret] (proofFromSecret nil secret))
