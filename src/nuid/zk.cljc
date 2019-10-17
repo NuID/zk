@@ -25,9 +25,9 @@
 
 (s/def ::conformed-hashfn
   (s/and fn?
-         #(s/valid? ::crypt/hashfn-parameters
-                    (::crypt/opts (meta %)))
-         #(::conformed? (meta %))))
+         (fn [f] (s/valid? ::crypt/hashfn-parameters
+                           (::crypt/opts (meta f))))
+         (fn [f] (::conformed? (meta f)))))
 
 (s/def ::hashfn-conformer
   (s/conformer
@@ -156,10 +156,10 @@
              (generateSpec
               [& [spec]]
               (doto #js {"protocol" #js {"id" "knizk"}
-                         "curve" #js {"id" "secp256k1"}
-                         "keyfn" (generateScryptParameters)
-                         "hashfn" #js {"id" "sha256"
-                                       "normalization-form" "NFKC"}}
+                         "curve"    #js {"id" "secp256k1"}
+                         "keyfn"    (generateScryptParameters)
+                         "hashfn"   #js {"id"                 "sha256"
+                                         "normalization-form" "NFKC"}}
                 (obj/extend (or spec #js {}))))
 
              (coerceSpec
@@ -197,8 +197,8 @@
               [spec pub nonce secret]
               (->> (merge
                     (coerceSpec spec)
-                    {:pub (coercePub pub)
-                     :nonce (coerceBn nonce)
+                    {:pub    (coercePub pub)
+                     :nonce  (coerceBn nonce)
                      :secret secret})
                    (proof)
                    (s/unform
@@ -209,8 +209,8 @@
              (proofFromSecret
               ([secret] (proofFromSecret nil secret))
               ([spec secret]
-               (let [spec (generateSpec spec)
-                     pub (or (obj/get spec "pub") (generatePub spec secret))
+               (let [spec  (generateSpec spec)
+                     pub   (or (obj/get spec "pub") (generatePub spec secret))
                      nonce (or (obj/get spec "nonce") (generateNonce))
                      proof (generateProof spec pub nonce secret)]
                  (doto #js {"nonce" nonce "pub" pub}
@@ -220,10 +220,10 @@
               [proof]
               (merge
                (coerceSpec proof)
-               {:pub (coercePub (obj/get proof "pub"))
+               {:pub   (coercePub (obj/get proof "pub"))
                 :nonce (coerceBn (obj/get proof "nonce"))
-                :c (coerceBn (obj/get proof "c"))
-                :s (coerceBn (obj/get proof "s"))}))
+                :c     (coerceBn (obj/get proof "c"))
+                :s     (coerceBn (obj/get proof "s"))}))
 
              (proofIsVerified
               [proof]
@@ -235,17 +235,14 @@
 
              (credentialFromProof
               [proof]
-              (obj/filter
-               proof
-               (fn [_ k _]
-                 (isCredentialKey k))))
+              (obj/filter proof (fn [_ k _] (isCredentialKey k))))
 
              (challengeFromCredential
               [cred]
               (doto #js {"nonce" (generateNonce)}
                 (obj/extend (generateSpec cred))))]
        #js {:generateScryptParameters generateScryptParameters
-            :proofFromSecret proofFromSecret
-            :proofIsVerified proofIsVerified
-            :credentialFromProof credentialFromProof
-            :challengeFromCredential challengeFromCredential})))
+            :proofFromSecret          proofFromSecret
+            :proofIsVerified          proofIsVerified
+            :credentialFromProof      credentialFromProof
+            :challengeFromCredential  challengeFromCredential})))
