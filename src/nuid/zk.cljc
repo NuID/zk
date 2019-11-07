@@ -93,14 +93,14 @@
       x
       (first x))))
 
-(defmulti pub dispatch)
+(defmulti  pub dispatch)
 (defmethod pub ::knizk
   [{:keys [curve keyfn secret pri]}]
   (point/mul
    (curve/base curve)
    (or pri (keyfn secret))))
 
-(defmulti proof dispatch)
+(defmulti  proof dispatch)
 (defmethod proof ::knizk
   [{:keys [curve keyfn hashfn pub nonce secret pri]}]
   (let [q (curve/order curve)
@@ -113,7 +113,7 @@
         s (bn/mod (bn/add (bn/mul c x) r) q)]
     {:c c :s s}))
 
-(defmulti verified? dispatch)
+(defmulti  verified? dispatch)
 (defmethod verified? ::knizk
   [{:keys [curve hashfn pub nonce c s]}]
   (let [A (point/add (point/mul (curve/base curve) s)
