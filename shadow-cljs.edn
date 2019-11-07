@@ -1,15 +1,13 @@
-{:builds
+{:deps {:aliases [:shadow]}
+ :builds
  {:browser
-  {:modules {:nuid_zk {:entries [nuid.zk]}},
+  {:modules    {:nuid_zk {:entries [nuid.zk]}},
    :output-dir "target/browser",
    :asset-path "target/browser",
-   :target :browser,
-   :compiler-options
-   {:externs ["externs/bn.ext.js" "externs/elliptic.ext.js"]}},
+   :target     :browser},
+
   :node
-  {:output-to "target/node/nuid_zk.js",
-   :exports-var nuid.zk/exports,
-   :target :node-library,
-   :compiler-options
-   {:externs ["externs/bn.ext.js" "externs/elliptic.ext.js"]}}},
- :deps {:aliases [:shadow]}}
+  {:output-to        "target/node/nuid_zk.js",
+   :exports-var      nuid.zk/exports,
+   :target           :node-library,
+   :compiler-options {:infer-externs :auto}}}}

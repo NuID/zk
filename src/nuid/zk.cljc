@@ -50,16 +50,20 @@
 (s/def ::keyfn
   (s/with-gen
     ::hashfn-conformer
-    (fn [] (->> (s/gen ::crypt/keyfn-parameters)
-                (gen/fmap (partial s/conform ::hashfn-conformer))))))
+    (fn []
+      (->>
+       (s/gen ::crypt/keyfn-parameters)
+       (gen/fmap (partial s/conform ::hashfn-conformer))))))
 
 (s/def ::hashfn
   (s/with-gen
     ::hashfn-conformer
-    (fn [] (->> (s/gen ::crypt/hashfn-parameters)
-                (gen/such-that (comp #{"sha256" "sha512"} :id))
-                (gen/fmap (fn [m] (dissoc m :salt)))
-                (gen/fmap (partial s/conform ::hashfn-conformer))))))
+    (fn []
+      (->>
+       (s/gen ::crypt/hashfn-parameters)
+       (gen/such-that (comp #{"sha256" "sha512"} :id))
+       (gen/fmap (fn [m] (dissoc m :salt)))
+       (gen/fmap (partial s/conform ::hashfn-conformer))))))
 
 (s/def ::pub ::point/point)
 (s/def ::pri ::bn/bn)
@@ -137,11 +141,13 @@
     (s/and ::challenge
            ::knizk-proof-data
            verified?)
-    (fn [] (->> (s/gen ::knizk-parameters)
-                (gen/fmap (fn [m] (assoc m :nonce (gen/generate (s/gen ::crypt/nonce)))))
-                (gen/fmap (fn [m] (assoc m :secret (gen/generate (s/gen ::secret)))))
-                (gen/fmap (fn [m] (assoc m :pub (pub m))))
-                (gen/fmap (fn [m] (merge m (proof m))))))))
+    (fn []
+      (->>
+       (s/gen ::knizk-parameters)
+       (gen/fmap (fn [m] (assoc m :nonce (gen/generate (s/gen ::crypt/nonce)))))
+       (gen/fmap (fn [m] (assoc m :secret (gen/generate (s/gen ::secret)))))
+       (gen/fmap (fn [m] (assoc m :pub (pub m))))
+       (gen/fmap (fn [m] (merge m (proof m))))))))
 
 (s/def ::proof
   (s/or ::knizk ::knizk-proof))
@@ -154,93 +160,96 @@
                  (obj/extend (or params #js {}))))
 
              (generateSpec
-              [& [spec]]
-              (doto #js {"protocol" #js {"id" "knizk"}
-                         "curve"    #js {"id" "secp256k1"}
-                         "keyfn"    (generateScryptParameters)
-                         "hashfn"   #js {"id"                 "sha256"
-                                         "normalization-form" "NFKC"}}
-                (obj/extend (or spec #js {}))))
+               [& [spec]]
+               (doto #js {"protocol" #js {"id" "knizk"}
+                          "curve"    #js {"id" "secp256k1"}
+                          "keyfn"    (generateScryptParameters)
+                          "hashfn"   #js {"id"                 "sha256"
+                                          "normalization-form" "NFKC"}}
+                 (obj/extend (or spec #js {}))))
 
              (coerceSpec
-              [spec]
-              (as-> (generateSpec spec) $
-                (js->clj $ :keywordize-keys true)
-                (s/conform ::knizk-parameters $)))
+               [spec]
+               (as-> (generateSpec spec) $
+                 (js->clj $ :keywordize-keys true)
+                 (s/conform ::knizk-parameters $)))
 
              (generatePub
-              ([secret] (generatePub nil secret))
-              ([spec secret]
-               (->> (merge
-                     (coerceSpec spec)
-                     {:secret secret})
-                    (pub)
-                    (s/unform ::pub)
-                    (clj->js))))
+               ([secret] (generatePub nil secret))
+               ([spec secret]
+                (->>
+                 (merge
+                  (coerceSpec spec)
+                  {:secret secret})
+                 (pub)
+                 (s/unform ::pub)
+                 (clj->js))))
 
              (coercePub
-              [pub]
-              (->> (js->clj pub :keywordize-keys true)
-                   (s/conform ::pub)))
+               [pub]
+               (->>
+                (js->clj pub :keywordize-keys true)
+                (s/conform ::pub)))
 
              (generateNonce
-              []
-              (->> (s/gen ::crypt/nonce)
-                   (gen/generate)
-                   (s/unform ::crypt/nonce)))
+               []
+               (->>
+                (s/gen ::crypt/nonce)
+                (gen/generate)
+                (s/unform ::crypt/nonce)))
 
              (coerceBn
-              [x]
-              (s/conform ::bn/bn x))
+               [x]
+               (s/conform ::bn/bn x))
 
              (generateProof
-              [spec pub nonce secret]
-              (->> (merge
-                    (coerceSpec spec)
-                    {:pub    (coercePub pub)
-                     :nonce  (coerceBn nonce)
-                     :secret secret})
-                   (proof)
-                   (s/unform
-                    (s/keys
-                     :req-un [::c ::s]))
-                   (clj->js)))
+               [spec pub nonce secret]
+               (->>
+                (merge
+                 (coerceSpec spec)
+                 {:pub    (coercePub pub)
+                  :nonce  (coerceBn nonce)
+                  :secret secret})
+                (proof)
+                (s/unform (s/keys :req-un [::c ::s]))
+                (clj->js)))
 
              (proofFromSecret
-              ([secret] (proofFromSecret nil secret))
-              ([spec secret]
-               (let [spec  (generateSpec spec)
-                     pub   (or (obj/get spec "pub") (generatePub spec secret))
-                     nonce (or (obj/get spec "nonce") (generateNonce))
-                     proof (generateProof spec pub nonce secret)]
-                 (doto #js {"nonce" nonce "pub" pub}
-                   (obj/extend spec proof)))))
+               ([secret] (proofFromSecret nil secret))
+               ([spec secret]
+                (let [spec  (generateSpec spec)
+                      pub   (or (obj/get spec "pub") (generatePub spec secret))
+                      nonce (or (obj/get spec "nonce") (generateNonce))
+                      proof (generateProof spec pub nonce secret)]
+                  (doto #js {"nonce" nonce "pub" pub}
+                    (obj/extend spec proof)))))
 
              (coerceProof
-              [proof]
-              (merge
-               (coerceSpec proof)
-               {:pub   (coercePub (obj/get proof "pub"))
-                :nonce (coerceBn (obj/get proof "nonce"))
-                :c     (coerceBn (obj/get proof "c"))
-                :s     (coerceBn (obj/get proof "s"))}))
+               [proof]
+               (merge
+                (coerceSpec proof)
+                {:pub   (coercePub (obj/get proof "pub"))
+                 :nonce (coerceBn (obj/get proof "nonce"))
+                 :c     (coerceBn (obj/get proof "c"))
+                 :s     (coerceBn (obj/get proof "s"))}))
 
              (proofIsVerified
-              [proof]
-              (verified? (coerceProof proof)))
+               [proof]
+               (verified? (coerceProof proof)))
 
              (isCredentialKey
-              [k]
-              (#{"keyfn" "pub"} k))
+               [k]
+               (#{"keyfn" "pub"} k))
 
              (credentialFromProof
-              [proof]
-              (obj/filter proof (fn [_ k _] (isCredentialKey k))))
+               [proof]
+               (obj/filter proof (fn [_ k _] (isCredentialKey k))))
 
              (challengeFromCredential
-              [cred]
-              (doto #js {"nonce" (generateNonce)}
-                (obj/extend (generateSpec cred))))]
+               [cred]
+               (doto #js {"nonce" (generateNonce)}
+                 (obj/extend (generateSpec cred))))]
+
        #js {:generateScryptParameters generateScryptParameters
             :proofFromSecret          proofFromSecret
             :proofIsVerified          proofIsVerified
