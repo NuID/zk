@@ -2,18 +2,18 @@
  {org.clojure/clojure {:mvn/version "1.10.1"},
   nuid/elliptic
   {:git/url "https://github.com/nuid/elliptic.git",
-   :sha "312829c7eb099d990e1807a9d5f04038cbce4b45"},
+   :sha "fe5c49da88503e58000a6a30338b2a0c78700798"},
   org.clojure/spec-alpha2
   {:git/url "https://github.com/clojure/spec-alpha2",
-   :sha "683e507a9647b65a248a5e00d314f9cfaaa2ce56"},
+   :sha "2a0a7c49c86e31b528be857ed004a4931a0c2551"},
   org.clojure/spec.alpha {:mvn/version "0.2.176"},
   org.clojure/clojurescript {:mvn/version "1.10.520"},
   nuid/base64
   {:git/url "https://github.com/nuid/base64.git",
-   :sha "6282194a235a3f759b4582a6281d3b628ae544f7"},
+   :sha "349f8a2ce9cf2f252f8107a697ed88f4b8080e58"},
   nuid/cryptography
   {:git/url "https://github.com/nuid/cryptography.git",
-   :sha "9c7ba6853fa21e00dcdff753a8eef73cc655caf1"},
+   :sha "b5ffb24f704021e63b32bcbf8a2f24a68d14da9b"},
   nuid/bn
   {:git/url "https://github.com/nuid/bn.git",
    :sha "b7acffeeca6c6190e7a2bd6c618371884877b11a"},
@@ -23,14 +23,14 @@
   {:extra-deps
    {com.jameslaverack/cljfmt-runner
     {:git/url "https://github.com/JamesLaverack/cljfmt-runner",
-     :sha "d6952345b3047e03ca3a88f89a1433c109b7b442"}},
+     :sha "6383fbb0bd22a21c0edf5b699425504d9f0a958a"}},
    :main-opts ["-m" "cljfmt-runner.check"]},
   :cljfmt/fix {:main-opts ["-m" "cljfmt-runner.fix"]},
   :depot
   {:extra-deps {olical/depot {:mvn/version "1.8.4"}},
    :main-opts ["-m" "depot.outdated.main"]},
   :depot/update {:main-opts ["-m" "depot.outdated.main --update"]},
-  :shadow {:extra-deps {thheller/shadow-cljs {:mvn/version "2.8.55"}}},
+  :shadow {:extra-deps {thheller/shadow-cljs {:mvn/version "2.8.69"}}},
   :repl
   {:extra-deps
    {nuid/deps
