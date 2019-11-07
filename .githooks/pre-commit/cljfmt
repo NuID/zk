@@ -1,2 +1,0 @@
-#!/bin/sh
-clojure -A:cljfmt:cljfmt/fix
