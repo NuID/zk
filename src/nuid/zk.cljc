@@ -24,10 +24,10 @@
     (fn [] (gen/string-ascii))))
 
 (s/def ::conformed-hashfn
-  (s/and fn?
-         (fn [f] (s/valid? ::crypt/hashfn-parameters
-                           (::crypt/opts (meta f))))
-         (fn [f] (::conformed? (meta f)))))
+  (s/and
+   fn?
+   (fn [f] (s/valid? ::crypt/hashfn-parameters (::crypt/opts (meta f))))
+   (fn [f] (::conformed? (meta f)))))
 
 (s/def ::hashfn-conformer
   (s/conformer
@@ -69,13 +69,16 @@
 (s/def ::pri ::bn/bn)
 
 (s/def ::knizk-parameters
-  (s/keys :req-un [::protocol
-                   ::curve/curve
-                   ::keyfn
-                   ::hashfn]))
+  (s/keys
+   :req-un
+   [::protocol
+    ::curve/curve
+    ::keyfn
+    ::hashfn]))
 
 (s/def ::parameters
-  (s/or ::knizk ::knizk-parameters))
+  (s/or
+   ::knizk ::knizk-parameters))
 
 (s/def ::credential
   (s/keys :req-un [::keyfn ::pub]))
@@ -83,12 +86,14 @@
 ;; TODO: not using `s/merge` because it
 ;; only conforms against it's first argument
 (s/def ::challenge
-  (s/keys :req-un [::protocol
-                   ::curve/curve
-                   ::keyfn
-                   ::hashfn
-                   ::pub
-                   ::crypt/nonce]))
+  (s/keys
+   :req-un
+   [::protocol
+    ::curve/curve
+    ::keyfn
+    ::hashfn
+    ::pub
+    ::crypt/nonce]))
 
 (defn- dispatch
   [x]
@@ -134,13 +139,15 @@
   (s/keys :req-un [::c ::s]))
 
 (s/def ::proof-data
-  (s/or ::knizk ::knizk-proof-data))
+  (s/or
+   ::knizk ::knizk-proof-data))
 
 (s/def ::knizk-proof
   (s/with-gen
-    (s/and ::challenge
-           ::knizk-proof-data
-           verified?)
+    (s/and
+     ::challenge
+     ::knizk-proof-data
+     verified?)
     (fn []
       (->>
        (s/gen ::knizk-parameters)
@@ -150,7 +157,8 @@
        (gen/fmap (fn [m] (merge m (proof m))))))))
 
 (s/def ::proof
-  (s/or ::knizk ::knizk-proof))
+  (s/or
+   ::knizk ::knizk-proof))
 
 #?(:cljs
    (def exports
