@@ -20,38 +20,31 @@ Git issues and other communications are warmly welcomed. [dev@nuid.io](mailto:de
 
 ```
 $ clj # or shadow-cljs node-repl
-=> (require '[nuid.elliptic.curve.point :as point])
-=> (require '[nuid.elliptic.curve :as curve])
-=> (require '[nuid.cryptography :as crypt])
-=> (require '[nuid.bn :as bn])
-=> (require '[nuid.zk :as zk])
-=> (def protocol {:id "knizk"})
-=> (def curve {:id "secp256k1"})
-=> (def keyfn {:id "sha256"
-               :salt (crypt/salt 32)
-               :normalization-form "NFKC"})
-=> (def hashfn {:id "sha256"
-                :normalization-form "NFKC"})
-=> (def secret "high entropy ✅")
-=> (def params (zk/coerce {:protocol protocol
-                           :curve curve
-                           :keyfn keyfn
-                           :hashfn hashfn
-                           :secret secret}))
-=> (def pub (zk/pub params))
-=> (def nonce (crypt/secure-random-bn 32))
-=> (def params (assoc params :pub pub :nonce nonce))
-=> (def good (zk/proof params))
-=> (def bad (zk/proof (assoc params :secret "garbage 🚮")))
-=> (def params (merge (dissoc params :secret) good))
-=> (zk/verified? params)           ;; true
-=> (def params (merge params bad)) ;; overwrite good
-=> (zk/verified? params)           ;; false
+=> (require
+     #?@(:clj
+         ['[clojure.spec-alpha2.gen :as gen]
+          '[clojure.spec-alpha2 :as s]]
+         :cljs
+         ['[clojure.spec.gen.alpha :as gen]
+          '[clojure.test.check.generators]
+          '[clojure.spec.alpha :as s]])
+     '[nuid.cryptography :as crypt]
+     '[nuid.zk :as zk])
+
+=> (def parameters (gen/generate (s/gen ::zk/parameters)))
+=> (def secret     "high entropy ✅")
+=> (def pub        (zk/pub (assoc parameters :secret secret)))
+=> (def nonce      (gen/generate (s/gen ::crypt/nonce)))
+=> (def parameters (merge parameters {:pub pub :nonce nonce}))
+
+=> (def good-proof (zk/proof (merge parameters {:secret secret})))
+=> (def bad-proof  (zk/proof (merge parameters {:secret "garbage 🚮"})))
+
+=> (zk/verified?   (merge parameters good-proof))
+=> (zk/verified?   (merge parameters bad-proof))
 ```
 
 ## From JavaScript
-
-This library aims to be usable from JavaScript. More work is necessary to establish the most convient consumption patterns.
 
 ### node:
 
@@ -97,7 +90,7 @@ To call `nuid.zk` from Java or other JVM languages, use one of the recommended i
 
 ## Notes
 
-The purpose of `nuid.zk` and sibling `nuid` libraries (e.g. [`nuid.bn`](https://github.com/nuid/bn)) is to abstract over platform-specific differences and provide a common interface to fundamental dependencies. This allows us to express dependent logic (e.g. [`nuid.zk`](https://github.com/nuid/zk)) once in pure Clojure(Script), and use it from each of the host platforms (Java, JavaScript, CLR). This is particularly useful for generating and verifying proofs across service boundaries. Along with [`tools.deps`](https://clojure.org/guides/deps_and_cli), this approach yields the code-sharing, circular-dependency avoidance, and local development benefits of a monorepo, with the modularity and orthogonality of an isolated library.
+The purpose of `nuid.zk` and sibling `nuid` libraries (e.g. [`nuid.bn`](https://github.com/nuid/bn)) is to abstract over platform-specific differences and provide a common interface to fundamental dependencies. This allows us to express dependent logic (e.g. [`nuid.zk`](https://github.com/nuid/zk)) once in pure Clojure(Script), and use it from each of the host platforms (Java, JavaScript, CLR). This is particularly useful for generating and verifying proofs across service boundaries.
 
 ## Licensing
 
