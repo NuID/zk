@@ -1,4 +1,4 @@
-{:deps {:aliases [:shadow]}
+{:deps {:aliases [:cljs]}
  :builds
  {:browser
   {:modules    {:nuid_zk {:entries [nuid.zk]}},

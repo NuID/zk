@@ -1,44 +1,12 @@
-# build
-target
-*.jar
-*.class
-classes
-pom.xml
-pom.xml.asc
-resources/public/js/nuid
-
 # clj
 .cpcache
-
-# terraform
-*.tfstate*
-.terraform
-plan
 
 # npm
 node_modules
 
-# emacs
-.\#*
-
-# vim
-*.swp
-*.swo
-
-# macOS
-.DS_Store
-
 # shadow-cljs
 .shadow-cljs
+target
 
 # nREPL
 .nrepl-port
-
-# nohup
-nohup.out
-
-# misc
-logs
-log
-tmp
-*.tmp

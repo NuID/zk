@@ -2,38 +2,24 @@
  {org.clojure/clojure {:mvn/version "1.10.1"},
   nuid/elliptic
   {:git/url "https://github.com/nuid/elliptic.git",
-   :sha "2a8641ec90976377cacbd81a8220c6a1b08f7118"},
+   :sha "8f8aab35aeb6d10dee4a734320ccac0d71191cc3"},
+  org.clojure/test.check {:mvn/version "0.10.0"},
   org.clojure/spec-alpha2
   {:git/url "https://github.com/clojure/spec-alpha2",
-   :sha "2a0a7c49c86e31b528be857ed004a4931a0c2551"},
-  org.clojure/spec.alpha {:mvn/version "0.2.176"},
-  org.clojure/clojurescript {:mvn/version "1.10.520"},
+   :sha "de38650874c6f0bc19e7755feab4d65b3fffb268"},
   nuid/base64
   {:git/url "https://github.com/nuid/base64.git",
-   :sha "a298b10817a8b7fd816e8d5c03e66c290fb49fe9"},
+   :sha "ad2dd471b31d217465676e73edca3da38f0e3409"},
   nuid/cryptography
   {:git/url "https://github.com/nuid/cryptography.git",
-   :sha "e139604c27be1a472859e32ec3da989dd1b4a634"},
+   :sha "062f0227df18ab4f39355b8904f68d7678d0a2a6"},
   nuid/bn
   {:git/url "https://github.com/nuid/bn.git",
-   :sha "4b8a3b97f9886781a95e3514e0890e851a264a1e"},
-  org.clojure/test.check {:mvn/version "0.10.0"}},
+   :sha "ae061648f41e1e75b5ca1bb97d4ac309328590e0"}},
  :aliases
- {:cljfmt
+ {:cljs
   {:extra-deps
-   {com.jameslaverack/cljfmt-runner
-    {:git/url "https://github.com/JamesLaverack/cljfmt-runner",
-     :sha "6383fbb0bd22a21c0edf5b699425504d9f0a958a"}},
-   :main-opts ["-m" "cljfmt-runner.check"]},
-  :cljfmt/fix {:main-opts ["-m" "cljfmt-runner.fix"]},
-  :depot
-  {:extra-deps {olical/depot {:mvn/version "1.8.4"}},
-   :main-opts ["-m" "depot.outdated.main"]},
-  :depot/update {:main-opts ["-m" "depot.outdated.main --update"]},
-  :shadow {:extra-deps {thheller/shadow-cljs {:mvn/version "2.8.69"}}},
-  :repl
-  {:extra-deps
-   {nuid/deps
-    {:git/url "https://github.com/nuid/deps.git",
-     :sha "843e7ff969e743a304aff39ab3d8f2e32b6847cf"}}}},
+   {org.clojure/clojurescript {:mvn/version "1.10.597"},
+    org.clojure/spec.alpha {:mvn/version "0.2.176"},
+    thheller/shadow-cljs {:mvn/version "2.8.74"}}}},
  :paths ["src"]}

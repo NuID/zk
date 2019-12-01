@@ -1,3 +1,5 @@
+<p align="right"><a href="https://nuid.io"><img src="https://nuid.io/svg/logo.svg" width="20%"></a></p>
+
 # nuid.zk
 
 Cross-platform zero knowledge proofs.
@@ -10,7 +12,7 @@ Git issues and other communications are warmly welcomed. [dev@nuid.io](mailto:de
 
 [`jvm`](https://www.java.com/en/download/), [`node + npm`](https://nodejs.org/en/download/), [`clj`](https://clojure.org/guides/getting_started), [`shadow-cljs`](https://shadow-cljs.github.io/docs/UsersGuide.html#_installation)
 
-## From Clojure and ClojureScript
+## Clojure and ClojureScript
 
 ### tools.deps:
 
@@ -44,7 +46,7 @@ $ clj # or shadow-cljs node-repl
 => (zk/verified?   (merge parameters bad-proof))
 ```
 
-## From JavaScript
+## JavaScript
 
 ### node:
 
@@ -78,13 +80,13 @@ $ node
 
 ### browser:
 
-The `npm` package is browser compatible in Webpack-like workflows.
+The `npm` package is browser-compatible in Webpack-like workflows.
 
-## From Java
+## Java
 
 To call `nuid.zk` from Java or other JVM languages, use one of the recommended interop strategies ([var/IFn](https://clojure.org/reference/java_interop#_calling_clojure_from_java) or [uberjar/aot](https://push-language.hampshire.edu/t/calling-clojure-code-from-java/865)). Doing so may require modifications or additions to the API for convenience.
 
-## From CLR
+## CLR
 
 [Coming soon](https://github.com/bcgit/bc-csharp)
 
@@ -95,24 +97,3 @@ The purpose of `nuid.zk` and sibling `nuid` libraries (e.g. [`nuid.bn`](https://
 ## Licensing
 
 Apache v2.0 or MIT
-
-## Contributing
-
-### formatting:
-
-```
-$ clojure -A:cljfmt            # check
-$ clojure -A:cljfmt:cljfmt/fix # fix
-```
-
-### dependencies:
-
-```
-## check
-$ npm outdated
-$ clojure -A:depot
-
-## update
-$ npm upgrade -s
-$ clojure -A:depot:depot/update
-```
