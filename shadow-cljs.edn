@@ -7,7 +7,6 @@
    :target     :browser},
 
   :node
-  {:output-to        "target/node/nuid_zk.js",
-   :exports-var      nuid.zk/exports,
-   :target           :node-library,
-   :compiler-options {:infer-externs :auto}}}}
+  {:output-to   "target/node/nuid_zk.js",
+   :exports-var nuid.zk/exports,
+   :target      :node-library}}}
