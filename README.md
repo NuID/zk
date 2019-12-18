@@ -4,8 +4,6 @@
 
 Cross-platform zero knowledge proofs.
 
-## ⚠️  This library has not been independently audited.
-
 Git issues and other communications are warmly welcomed. [dev@nuid.io](mailto:dev@nuid.io)
 
 ## Requirements
@@ -97,3 +95,7 @@ The purpose of `nuid.zk` and sibling `nuid` libraries (e.g. [`nuid.bn`](https://
 ## Licensing
 
 Apache v2.0 or MIT
+
+## ⚠️  Disclaimer
+
+This library is [property tested](https://github.com/clojure/test.check#testcheck) to help verify implementation, but has not yet been audited by an independent third party.
