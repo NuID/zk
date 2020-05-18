@@ -1,12 +1,12 @@
 {:deps {:aliases [:cljs]}
  :builds
  {:browser
-  {:modules    {:nuid_zk {:entries [nuid.zk]}},
+  {:modules    {:nuid_zk {:entries [nuid.zk.js]}},
    :output-dir "target/browser",
    :asset-path "target/browser",
    :target     :browser},
 
   :node
   {:output-to   "target/node/nuid_zk.js",
-   :exports-var nuid.zk/exports,
+   :exports-var nuid.zk.js/exports,
    :target      :node-library}}}
