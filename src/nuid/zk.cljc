@@ -5,8 +5,10 @@
    #?@(:clj  [[clojure.alpha.spec :as s]]
        :cljs [[clojure.spec.alpha :as s]])))
 
-(s/def ::protocol
+(def protocols
   #{::protocol/knizk})
+
+(s/def ::protocol protocols)
 
 (def pub       protocol/pub)
 (def proof     protocol/proof)
