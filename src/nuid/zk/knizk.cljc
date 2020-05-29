@@ -124,6 +124,7 @@
 (defmethod protocol/parameters-multi-spec ::protocol/knizk [_] ::parameters)
 (defmethod protocol/credential-multi-spec ::protocol/knizk [_] ::credential)
 (defmethod protocol/challenge-multi-spec  ::protocol/knizk [_] ::challenge)
+(defmethod protocol/provable-multi-spec   ::protocol/knizk [_] ::provable)
 (defmethod protocol/proof-multi-spec      ::protocol/knizk [_] ::proof)
 (defmethod protocol/verifiable-multi-spec ::protocol/knizk [_] ::verifiable)
 (defmethod protocol/verified-multi-spec   ::protocol/knizk [_] ::verified)

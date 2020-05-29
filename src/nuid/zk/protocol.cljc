@@ -7,6 +7,7 @@
 (defmulti parameters-multi-spec :nuid.zk/protocol)
 (defmulti credential-multi-spec :nuid.zk/protocol)
 (defmulti challenge-multi-spec  :nuid.zk/protocol)
+(defmulti provable-multi-spec   :nuid.zk/protocol)
 (defmulti proof-multi-spec      :nuid.zk/protocol)
 (defmulti verifiable-multi-spec :nuid.zk/protocol)
 (defmulti verified-multi-spec   :nuid.zk/protocol)
