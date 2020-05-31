@@ -3,9 +3,12 @@
    [nuid.base64 :as base64]
    [nuid.bn :as bn]
    [nuid.cryptography.bn :as crypt.bn]
-   [nuid.cryptography.hash.bn :as crypt.hash.bn]
+   [nuid.cryptography.hash :as hash]
+   [nuid.cryptography.hash.algorithm :as hash.alg]
+   [nuid.cryptography.hash.bn :as hash.bn]
    [nuid.elliptic.curve.point :as point]
    [nuid.elliptic.curve :as curve]
+   [nuid.spec :as spec]
    [nuid.zk.protocol :as protocol]
    #?@(:clj
        [[clojure.alpha.spec.gen :as gen]
@@ -21,8 +24,8 @@
     (fn [] (gen/string-ascii))))
 
 (s/def ::curve  ::curve/curve)
-(s/def ::hashfn ::crypt.hash.bn/hashfn)
-(s/def ::keyfn  ::crypt.hash.bn/keyfn)
+(s/def ::hashfn ::hash.bn/hashfn)
+(s/def ::keyfn  ::hash.bn/keyfn)
 (s/def ::pub    ::point/point)
 (s/def ::pri    ::bn/bn)
 (s/def ::nonce  ::crypt.bn/nonce)
@@ -51,7 +54,7 @@
    [::pub]))
 
 (s/def ::provable
-  (s/and
+  (s/and-
    (s/keys
     :req
     [::curve
@@ -121,6 +124,19 @@
        (gen/fmap (fn [m] (merge m (protocol/pub m))))
        (gen/fmap (fn [m] (merge m (protocol/proof m))))))))
 
+(defn credential
+  [x]
+  (->>
+   (spec/keys-spec->keys ::credential)
+   (select-keys x)))
+
+(defmethod protocol/credential ::protocol/knizk
+  [x]
+  (->>
+   (spec/keys-spec->keys ::credential)
+   (into [:nuid.zk/protocol])
+   (select-keys x)))
+
 (defmethod protocol/parameters-multi-spec ::protocol/knizk [_] ::parameters)
 (defmethod protocol/credential-multi-spec ::protocol/knizk [_] ::credential)
 (defmethod protocol/challenge-multi-spec  ::protocol/knizk [_] ::challenge)
@@ -128,3 +144,10 @@
 (defmethod protocol/proof-multi-spec      ::protocol/knizk [_] ::proof)
 (defmethod protocol/verifiable-multi-spec ::protocol/knizk [_] ::verifiable)
 (defmethod protocol/verified-multi-spec   ::protocol/knizk [_] ::verified)
+
+(defn default-challenge-parameters
+  []
+  {::curve  {::curve/id ::curve/secp256k1}
+   ::hashfn (hash/default-parameters {::hash/algorithm ::hash.alg/sha256})
+   ::keyfn  (hash/default-parameters {::hash/algorithm ::hash.alg/scrypt})
+   ::nonce  (s/unform ::crypt.bn/nonce (gen/generate (s/gen ::crypt.bn/nonce)))})

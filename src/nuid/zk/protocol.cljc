@@ -1,8 +1,12 @@
 (ns nuid.zk.protocol)
 
-(defmulti pub       :nuid.zk/protocol)
-(defmulti proof     :nuid.zk/protocol)
-(defmulti verified? :nuid.zk/protocol)
+(def protocols
+  #{::knizk})
+
+(defmulti pub        :nuid.zk/protocol)
+(defmulti proof      :nuid.zk/protocol)
+(defmulti verified?  :nuid.zk/protocol)
+(defmulti credential :nuid.zk/protocol)
 
 (defmulti parameters-multi-spec :nuid.zk/protocol)
 (defmulti credential-multi-spec :nuid.zk/protocol)

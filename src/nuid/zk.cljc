@@ -5,15 +5,13 @@
    #?@(:clj  [[clojure.alpha.spec :as s]]
        :cljs [[clojure.spec.alpha :as s]])))
 
-(def protocols
-  #{::protocol/knizk})
+(def protocols  protocol/protocols)
+(def pub        protocol/pub)
+(def proof      protocol/proof)
+(def verified?  protocol/verified?)
+(def credential protocol/credential)
 
-(s/def ::protocol protocols)
-
-(def pub       protocol/pub)
-(def proof     protocol/proof)
-(def verified? protocol/verified?)
-
+(s/def ::protocol   protocols)
 (s/def ::parameters (s/multi-spec protocol/parameters-multi-spec ::protocol))
 (s/def ::credential (s/multi-spec protocol/credential-multi-spec ::protocol))
 (s/def ::challenge  (s/multi-spec protocol/challenge-multi-spec  ::protocol))
