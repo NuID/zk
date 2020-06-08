@@ -8,7 +8,7 @@
    [nuid.cryptography.hash.bn :as hash.bn]
    [nuid.elliptic.curve.point :as point]
    [nuid.elliptic.curve :as curve]
-   [nuid.spec :as spec]
+   [nuid.spec.lib :as spec.lib]
    [nuid.zk.protocol :as protocol]
    #?@(:clj
        [[clojure.alpha.spec.gen :as gen]
@@ -126,15 +126,13 @@
 
 (defn credential
   [x]
-  (->>
-   (spec/keys-spec->keys ::credential)
-   (select-keys x)))
+  (spec.lib/select-keys ::credential x))
 
 (defmethod protocol/credential ::protocol/knizk
   [x]
   (->>
-   (spec/keys-spec->keys ::credential)
-   (into [:nuid.zk/protocol])
+   (spec.lib/keys-spec->keys ::credential)
+   (into #{:nuid.zk/protocol})
    (select-keys x)))
 
 (defmethod protocol/parameters-multi-spec ::protocol/knizk [_] ::parameters)

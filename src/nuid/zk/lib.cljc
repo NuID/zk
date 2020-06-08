@@ -6,7 +6,7 @@
    [nuid.cryptography.hash.lib :as hash.lib]
    [nuid.elliptic.curve :as curve]
    [nuid.lib :as lib]
-   [nuid.spec :as spec]
+   [nuid.spec.lib :as spec.lib]
    [nuid.zk :as zk]
    [nuid.zk.knizk :as knizk]
    [nuid.zk.protocol :as protocol]
@@ -33,8 +33,8 @@
 (def credential-keys
   (into
    (hash-set)
-   (mapcat spec/keys-spec->keys)
-   [::knizk/credential]))
+   (mapcat spec.lib/keys-spec->keys)
+   #{::knizk/credential}))
 
 (def fqns
   (into
