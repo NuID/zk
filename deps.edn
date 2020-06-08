@@ -1,21 +1,27 @@
 {:deps
  {org.clojure/clojure {:mvn/version "1.10.1"},
-  nuid/elliptic
-  {:git/url "https://github.com/nuid/elliptic.git",
-   :sha "e53195049b7a03e72dc57ab24fc2038b37738bc5"},
-  org.clojure/test.check {:mvn/version "1.0.0"},
   org.clojure/alpha.spec
   {:git/url "https://github.com/clojure/spec-alpha2",
    :sha "8498f9cb352135579b6d3a0a5d15c40e5c2647ce"},
+  nuid/elliptic
+  {:git/url "https://github.com/nuid/elliptic.git",
+   :sha "68ffb6ad16a9c23f0d1d4ee3db2bd9af208eadb6"},
   nuid/base64
   {:git/url "https://github.com/nuid/base64.git",
-   :sha "59fa46ddc020dc11824e16e18ad639ac9e1ea252"},
+   :sha "e46986d141a014bfec9786a1f0824cedbe4b28d5"},
   nuid/cryptography
   {:git/url "https://github.com/nuid/cryptography.git",
-   :sha "ff69e934d4cfeba763bc02a77568e88dba3c285a"},
+   :sha "654857361a87d9559d764a30bfc866223125577a"},
   nuid/bn
   {:git/url "https://github.com/nuid/bn.git",
-   :sha "fead0882bfd7e2ddcbfc5c694292a49b9573d36e"}},
+   :sha "fc3d2cba333441c4403a16460f7ad1d8f9b45705"},
+  org.clojure/test.check {:mvn/version "1.0.0"},
+  nuid/spec
+  {:git/url "https://github.com/nuid/spec.git",
+   :sha "3169ac195b8915d20cdffe503119b1339dd66829"},
+  nuid/lib
+  {:git/url "git@github.com:NuID/lib.git",
+   :sha "9e9c73dfca40e28c2530e42b41e42cbfe02027eb"}},
  :aliases
  {:cljs
   {:extra-deps
