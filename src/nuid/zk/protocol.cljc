@@ -1,7 +1,9 @@
-(ns nuid.zk.protocol)
+(ns nuid.zk.protocol
+  (:require
+   [nuid.ident.zk :as ident.zk]))
 
-(def protocols
-  #{::knizk})
+(def protocols ident.zk/protocols)
+(def default   ::knizk)
 
 (defmulti pub        :nuid.zk/protocol)
 (defmulti proof      :nuid.zk/protocol)

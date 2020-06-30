@@ -5,25 +5,27 @@
    [nuid.zk.lib :as zk.lib]))
 
 (defn ->js
-  [spec data]
-  (->>
-   (s/unform spec data)
-   (zk.lib/stringify)
-   (clj->js)))
+  ([data]
+   (->>
+    (zk.lib/stringify data)
+    (clj->js)))
+  ([spec data]
+   (->>
+    (s/unform spec data)
+    (->js))))
 
 (defn ->clj
-  [spec data]
-  (->>
-   (js->clj data :keywordize-keys true)
-   (zk.lib/keywordize)
-   (s/conform spec)))
+  ([data]
+   (->>
+    (js->clj data :keywordize-keys true)
+    (zk.lib/keywordize)))
+  ([spec data]
+   (->>
+    (->clj data)
+    (s/conform spec))))
 
-(def credential-keys
+(def credential-key?
   (into
    (hash-set)
    (map lib/fqn)
    zk.lib/credential-keys))
-
-(defn obj-credential-filter
-  [_ k _]
-  (credential-keys k))

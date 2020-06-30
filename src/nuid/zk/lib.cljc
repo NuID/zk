@@ -2,9 +2,9 @@
   (:require
    [clojure.set :as set]
    [clojure.walk :as walk]
-   [nuid.cryptography.hash.algorithm :as hash.alg]
-   [nuid.cryptography.hash.lib :as hash.lib]
-   [nuid.elliptic.curve :as curve]
+   [nuid.ident.cryptography :as ident.crypt]
+   [nuid.ident.elliptic :as ident.elliptic]
+   [nuid.ident.zk :as ident.zk]
    [nuid.lib :as lib]
    [nuid.spec.lib :as spec.lib]
    [nuid.zk :as zk]
@@ -41,10 +41,10 @@
    (hash-set)
    (map lib/fqn)
    (set/union
-    curve/ids
-    hash.alg/algorithms
-    hash.lib/string-normalization-forms
-    protocol/protocols)))
+    ident.elliptic/curve-ids
+    ident.crypt/hash-algorithms
+    ident.crypt/string-normalization-forms
+    ident.zk/protocols)))
 
 (defn -postwalk-stringify
   [x]

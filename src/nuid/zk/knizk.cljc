@@ -54,17 +54,17 @@
    [::pub]))
 
 (s/def ::provable
-  (s/and-
+  (s/and
    (s/keys
     :req
     [::curve
      ::hashfn
      ::keyfn
      ::pub
-     ::nonce])
-   (s/or
-    ::secret (s/keys :req [::secret])
-    ::pri    (s/keys :req [::pri]))))
+     ::nonce
+     (or
+      ::secret
+      ::pri)])))
 
 (s/def ::c ::bn/bn)
 (s/def ::s ::bn/bn)
