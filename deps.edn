@@ -21,7 +21,7 @@
    :sha "56e386f70036b2bd09d32b23b6ea711434d7b196"},
   nuid/spec
   {:git/url "https://github.com/nuid/spec.git",
-   :sha "1acac913610383961f570f35bc4917bd0c0dd136"},
+   :sha "50b7d4bc6ae0ad404b337732a913dc50d30cd6db"},
   nuid/lib
   {:git/url "https://github.com/nuid/lib.git",
    :sha "a8fe195383b8036a863d1686c7e8986e04d29fcb"}},
