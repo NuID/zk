@@ -1,6 +1,6 @@
 {
   "name": "@nuid/zk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cross-platform zero knowledge facilities",
   "main": "target/node/nuid_zk.js",
   "files": [
@@ -24,7 +24,7 @@
     "bn.js": "^5.1.1",
     "brorand": "^1.1.0",
     "buffer": "^5.6.0",
-    "elliptic": "^6.5.2",
+    "elliptic": "^6.5.3",
     "hash.js": "^1.1.7",
     "scryptsy": "^2.1.0"
   },

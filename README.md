@@ -69,7 +69,7 @@ $ node
 
 // client context, sign in
 > var challenge = JSON.parse(json);
-> proof = Zk.proofFromSecretAndChallenge(secret, challenge);
+> var proof = Zk.proofFromSecretAndChallenge(secret, challenge);
 > var json = JSON.stringify(proof);
 
 // server context, sign in
