@@ -48,32 +48,34 @@ $ clj # or shadow-cljs node-repl
 
 ### node:
 
-```
+```bash
+$ npm install -s @nuid/zk
 $ node
 > var Zk = require('@nuid/zk');
 
 // client context, sign up
 > var secret = "high entropy ✅"
-> var proof = Zk.proofFromSecret(secret);
-> var json = JSON.stringify(proof);
+> var verifiable = Zk.verifiableFromSecret(secret);
+> var json = JSON.stringify(verifiable);
 
 // server context, sign up
-> var proof = JSON.parse(json);
-> Zk.proofIsVerified(proof);
-> var credential = Zk.credentialFromProof(proof); // persist (db, ledger, ...)
+> var verifiable = JSON.parse(json);
+> Zk.isVerified(verifiable)
+> var credential = Zk.credentialFromVerifiable(verifiable); // persist credential (db, ledger, ...)
 
 // server context, sign in
-> var challenge = Zk.challengeFromCredential(credential);
+> var challenge = Zk.defaultChallengeFromCredential(credential); // retrieve credential (db, ledger, ...)
 > var json = JSON.stringify(challenge);
 
 // client context, sign in
 > var challenge = JSON.parse(json);
-> proof = Zk.proofFromSecret(challenge, secret);
+> proof = Zk.proofFromSecretAndChallenge(secret, challenge);
 > var json = JSON.stringify(proof);
 
 // server context, sign in
 > var proof = JSON.parse(json);
-> Zk.proofIsVerified(proof) ? /* ... */ : /* ... */ ;
+> var verifiable = Zk.verifiableFromProofAndChallenge(proof, challenge)
+> Zk.isVerified(verifiable) ? /* verified */ : /* unverified */ ;
 ```
 
 ### browser:
