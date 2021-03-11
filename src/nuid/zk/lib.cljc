@@ -1,6 +1,7 @@
 (ns nuid.zk.lib
   (:require
    [clojure.set :as set]
+   [clojure.spec.alpha :as s]
    [clojure.walk :as walk]
    [nuid.ident.cryptography :as ident.crypt]
    [nuid.ident.elliptic :as ident.elliptic]
@@ -9,9 +10,7 @@
    [nuid.spec.lib :as spec.lib]
    [nuid.zk :as zk]
    [nuid.zk.knizk :as knizk]
-   [nuid.zk.protocol :as protocol]
-   #?@(:clj  [[clojure.alpha.spec :as s]]
-       :cljs [[clojure.spec.alpha :as s]])))
+   [nuid.zk.protocol :as protocol]))
 
 (defn default-challenge-parameters
   []

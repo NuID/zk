@@ -1,5 +1,8 @@
 (ns nuid.zk.knizk
   (:require
+   [clojure.spec.alpha :as s]
+   [clojure.spec.gen.alpha :as gen]
+   [clojure.test.check.generators]
    [nuid.base64 :as base64]
    [nuid.bn :as bn]
    [nuid.cryptography.bn :as crypt.bn]
@@ -9,14 +12,7 @@
    [nuid.elliptic.curve.point :as point]
    [nuid.elliptic.curve :as curve]
    [nuid.spec.lib :as spec.lib]
-   [nuid.zk.protocol :as protocol]
-   #?@(:clj
-       [[clojure.alpha.spec.gen :as gen]
-        [clojure.alpha.spec :as s]]
-       :cljs
-       [[clojure.spec.gen.alpha :as gen]
-        [clojure.test.check.generators]
-        [clojure.spec.alpha :as s]])))
+   [nuid.zk.protocol :as protocol]))
 
 (s/def ::secret
   (s/with-gen

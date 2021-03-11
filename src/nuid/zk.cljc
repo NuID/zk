@@ -1,9 +1,8 @@
 (ns nuid.zk
   (:require
+   [clojure.spec.alpha :as s]
    [nuid.zk.knizk]
-   [nuid.zk.protocol :as protocol]
-   #?@(:clj  [[clojure.alpha.spec :as s]]
-       :cljs [[clojure.spec.alpha :as s]])))
+   [nuid.zk.protocol :as protocol]))
 
 (def protocols  protocol/protocols)
 (def pub        protocol/pub)
