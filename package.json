@@ -2,7 +2,7 @@
   "name": "@nuid/zk-react-native",
   "version": "0.1.0",
   "description": "Cross-platform zero knowledge facilities for react-native",
-  "main": "target/node/nuid_zk.js",
+  "main": "target/react_native/nuid_zk.js",
   "files": [
     "LICENSE*"
   ],

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-out_file=target/node/nuid_zk.js
+out_file=target/react_native/nuid_zk.js
 rm -rf target
-shadow-cljs release node
+shadow-cljs release react-native
 
 contents=$(cat $out_file)
 cat <<EOF > $out_file
@@ -13,4 +13,4 @@ self.crypto = window.crypto
 ${contents}
 EOF
 
-# npm publish
+npm publish
