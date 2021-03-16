@@ -2,95 +2,88 @@
 
 # nuid.zk
 
-Cross-platform zero knowledge proofs.
+Zero knowledge proofs for React Native projects. This branch provides the
+`@nuid/zk-react-native` npm package, mirroring the interface to the `@nuid/zk`
+npm package.
 
-Git issues and other communications are warmly welcomed. [dev@nuid.io](mailto:dev@nuid.io)
-
-## Requirements
-
-[`jvm`](https://www.java.com/en/download/), [`node + npm`](https://nodejs.org/en/download/), [`clj`](https://clojure.org/guides/getting_started), [`shadow-cljs`](https://shadow-cljs.github.io/docs/UsersGuide.html#_installation)
+Github issues and other communications are warmly welcomed.
+[dev@nuid.io](mailto:support@nuid.io)
 
 ## Clojure and ClojureScript
 
-### tools.deps:
-
-`{nuid/zk {:git/url "https://github.com/nuid/zk" :sha "..."}}`
-
-### usage:
-
-```
-$ clj # or shadow-cljs node-repl
-=> (require
-     #?@(:clj
-         ['[clojure.spec-alpha2.gen :as gen]
-          '[clojure.spec-alpha2 :as s]]
-         :cljs
-         ['[clojure.spec.gen.alpha :as gen]
-          '[clojure.test.check.generators]
-          '[clojure.spec.alpha :as s]])
-     '[nuid.cryptography :as crypt]
-     '[nuid.zk :as zk])
-
-=> (def parameters (gen/generate (s/gen ::zk/parameters)))
-=> (def secret     "high entropy ✅")
-=> (def pub        (zk/pub (assoc parameters :secret secret)))
-=> (def nonce      (gen/generate (s/gen ::crypt/nonce)))
-=> (def parameters (merge parameters {:pub pub :nonce nonce}))
-
-=> (def good-proof (zk/proof (merge parameters {:secret secret})))
-=> (def bad-proof  (zk/proof (merge parameters {:secret "garbage 🚮"})))
-
-=> (zk/verified?   (merge parameters good-proof))
-=> (zk/verified?   (merge parameters bad-proof))
-```
+See the [main branch](https://github.com/NuID/zk/blob/master/README.md) for
+clj/s installation and usage.
 
 ## JavaScript
 
-### node:
+### Installing into an existing react-native app
 
+`react-native` doesn't have a perfect hardware interop, so you'll need
+to do a few additional steps to get the `zk` package with dependant polyfills
+installed correctly.
+
+The following is from
+[parshap/node-libs-react-native](https://github.com/parshap/node-libs-react-native) on
+GitHub.
+
+1. First you'll need to install a few dependencies:
+   + Install the `@nuid/zk-react-native` package  instead of `@nuid/zk`. This is a
+     react-native specific version of NuID's `zk` package (which has an
+     identical JS interface to `@nuid/zk`).
+   + You'll also need `react-native-randombytes` as a top-level dependency in
+     your app so that react-native will link it correctly.
+   + And finally, `node-libs-react-native` for shimming node dependencies in
+     react-native which is necessary to support zk credential and proof
+     generation.
+
+```sh
+$ yarn add @nuid/zk-react-native node-libs-react-native react-native-randombytes
+# if RN < 0.60
+$ react-native link react-native-randombytes
+# else RN >= 0.60, instead do
+$ cd iOS && pod install
 ```
-$ node
-> var Zk = require('@nuid/zk');
+
+2. Modify `metro.config.js` to add `extraNodeModules` configuration to wire up
+   `node-libs-react-native` correctly:
+
+```js
+// metro.config.js
+module.exports = {
+  // ...
+  resolver: {
+    extraNodeModules: require('node-libs-react-native')
+  }
+};
+```
+
+3. Import `node-libs-react-native/globals` before you import `@nuid/zk-react-native`:
+
+``` js
+// index.js
+// Add globals here (or anywhere _before_ importing @nuid/zk-react-native)
+import 'node-libs-react-native/globals';
+import { registerRootComponent } from 'expo';
+import App from './src/app';
+registerRootComponent(App);
+```
+
+### React Native usage:
+
+```js
+import Zk from '@nuid/zk-react-native';
 
 // client context, sign up
-> var secret = "high entropy ✅"
-> var proof = Zk.proofFromSecret(secret);
-> var json = JSON.stringify(proof);
-
-// server context, sign up
-> var proof = JSON.parse(json);
-> Zk.proofIsVerified(proof);
-> var credential = Zk.credentialFromProof(proof); // persist (db, ledger, ...)
-
-// server context, sign in
-> var challenge = Zk.challengeFromCredential(credential);
-> var json = JSON.stringify(challenge);
+let password = "high entropy ✅"
+let verifiable = Zk.verifiableFromSecret(password);
+// send to server to register with NuID Auth API
 
 // client context, sign in
-> var challenge = JSON.parse(json);
-> proof = Zk.proofFromSecret(challenge, secret);
-> var json = JSON.stringify(proof);
-
-// server context, sign in
-> var proof = JSON.parse(json);
-> Zk.proofIsVerified(proof) ? /* ... */ : /* ... */ ;
+// get challenge from API for user credential, then
+let proof = Zk.proofFromSecretAndChallenge(password, challenge);
+// 
 ```
 
-### browser:
-
-The `npm` package is browser-compatible in Webpack-like workflows.
-
-## Java
-
-To call `nuid.zk` from Java or other JVM languages, use one of the recommended interop strategies ([var/IFn](https://clojure.org/reference/java_interop#_calling_clojure_from_java) or [uberjar/aot](https://push-language.hampshire.edu/t/calling-clojure-code-from-java/865)). Doing so may require modifications or additions to the API for convenience.
-
-## CLR
-
-[Coming soon](https://github.com/bcgit/bc-csharp)
-
-## Notes
-
-The purpose of `nuid.zk` and sibling `nuid` libraries (e.g. [`nuid.bn`](https://github.com/nuid/bn)) is to abstract over platform-specific differences and provide a common interface to fundamental dependencies. This allows us to express dependent logic (e.g. [`nuid.zk`](https://github.com/nuid/zk)) once in pure Clojure(Script), and use it from each of the host platforms (Java, JavaScript, CLR). This is particularly useful for generating and verifying proofs across service boundaries.
 
 ## Licensing
 
@@ -98,4 +91,6 @@ Apache v2.0 or MIT
 
 ## ⚠️  Disclaimer
 
-This library is [property tested](https://github.com/clojure/test.check#testcheck) to help verify implementation, but has not yet been audited by an independent third party.
+This library is [property
+tested](https://github.com/clojure/test.check#testcheck) to help verify
+implementation, but has not yet been audited by an independent third party.
