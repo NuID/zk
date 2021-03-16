@@ -1,6 +1,6 @@
 {:deps {:aliases [:cljs]}
  :builds
- {:node
-  {:target      :node-library,
-   :exports-var nuid.zk.js/exports,
-   :output-to   "target/node/nuid_zk.js"}}}
+ {:react-native
+  {:target      :node-library
+   :exports-var nuid.zk.js/exports
+   :output-to   "target/react_native/nuid_zk.js"}}}
