@@ -12,7 +12,6 @@ describe('zk typescript definitions', () => {
     assert.ok(challenge)
     const proof: zk.Proof = zk.proofFromSecretAndChallenge(secret, challenge)
     assert.ok(proof)
-    const foo = verified["nuid.zk/protocol"]
     const verified2: zk.VerifiedCredential = zk.verifiableFromProofAndChallenge(proof, challenge)
     assert.ok(verified2)
     assert.strictEqual(
