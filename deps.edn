@@ -8,7 +8,7 @@
    :sha "1973314afc3710a045d617830a8fa64d86cecb11"},
   nuid/cryptography
   {:git/url "https://github.com/nuid/cryptography.git",
-   :sha "4d372c8fe7a663c25cd92928a913e29a9c9b850b"},
+   :sha "46667476309e5d0172a447851c205222491441a1"},
   nuid/bn
   {:git/url "https://github.com/nuid/bn.git",
    :sha "30036cd9bf7654fef3987b57887878b1d8f8f76b"},
@@ -18,7 +18,7 @@
    :sha "f4b9ef164b175f515f032aa194a17727d71eedb4"},
   nuid/spec
   {:git/url "https://github.com/nuid/spec.git",
-   :sha "50e2f2ccf5aecf3e0aeb7b084517508ea00ba08c"},
+   :sha "ad05529d0cddaf703c501e1513a45db0ff91acfe"},
   nuid/lib
   {:git/url "https://github.com/nuid/lib.git",
    :sha "93fec185a33d5abc59d8ec234ed57abe3b3d61f5"}},
